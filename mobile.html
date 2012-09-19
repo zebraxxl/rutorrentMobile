@@ -1,0 +1,108 @@
+<div class="navbar navbar-inverse navbar-fixed-top"><div class="navbar-inner"><div class="container">
+	<ul class="nav navbar-inverse">
+		<li><a id="navBack" href="javascript://void();" onclick="window.history.go(-1);">
+			<i class="icon-arrow-left icon-white"></i>
+		</a></li>
+		<li><a id="navSettings" href="javascript://void();" onclick="mobile.showSettings();">
+			<i class="icon-tasks icon-white"></i>
+		</a></li>
+		<li><a id="navAdd" href="javascript://void();" onclick="mobile.addTorrent();">
+			<i class="icon-plus icon-white"></i>
+		</a></li>
+
+		<li class="torrentControl divider-vertical"></li>
+		<li class="torrentControl"><a id="torrentStart" href="javascript://void();" onclick="mobile.start();">
+			<i class="icon-play icon-white"></i>
+		</a></li>
+		<li class="torrentControl"><a id="torrentStop" href="javascript://void();" onclick="mobile.stop();">
+			<i class="icon-stop icon-white"></i>
+		</a></li>
+		<li class="torrentControl"><a id="torrentPause" href="javascript://void();" onclick="mobile.pause();">
+			<i class="icon-pause icon-white"></i>
+		</a></li>
+		<li class='torrentControl'><a id="torrentDelete" href="javascript://void();" onclick="mobile.delete();">
+			<i class="icon-trash icon-white"></i>
+		</a></li>
+	</ul>
+</div></div></div>
+<div class="mainContainer" id="torrentsList">
+	<ul class="nav nav-tabs">
+		<li class="active" id="torrentsAll">
+			<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.all, this);"></a>
+		</li>
+		<li id="torrentsDownloading">
+			<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.downloading, this);"></a>
+		</li>
+		<li id="torrentsCompleted">
+			<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.completed, this);"></a>
+		</li>
+	</ul>
+	<div id="list"></div>
+</div>
+<div class="mainContainer" id="torrentDetails" style="display:none;">
+	<h5 id="torrentName"></h5>
+	<div class="progress progress-striped" id="torrentProgress">
+		<div class="bar"></div>
+	</div>
+	<table class="table table-striped">
+		<tbody>
+			<tr id="status"><td></td><td></td></tr>
+			<tr id="done"><td></td><td></td></tr>
+			<tr id="downloaded"><td></td><td></td></tr>
+			<tr id="remaining"><td></td><td></td></tr>
+			<tr id="uploaded"><td></td><td></td></tr>
+			<tr id="downloadSpeed"><td></td><td></td></tr>
+			<tr id="uploadSpeed"><td></td><td></td></tr>
+			<tr id="ratio"><td></td><td></td></tr>
+			<tr id="timeElapsed"><td></td><td></td></tr>
+			<tr id="wasted"><td></td><td></td></tr>
+			<tr id="seeds"><td></td><td></td></tr>
+			<tr id="peers"><td></td><td></td></tr>
+		</tbody>
+	</table>
+</div>
+<div class="mainContainer" id="globalSettings" style="display:none;">
+	<label class="select">
+		<h6></h6>
+		<select id="dlLimit">
+		</select>
+	</label>
+	<label class="select">
+		<h6></h6>
+		<select id="ulLimit">
+		</select>
+	</label>
+</div>
+<div class="mainContainer" id="addTorrent" style="display:none;">
+	<iframe name="uploadFrame" style="visibility: hidden; width: 0px; height: 0px; "></iframe>
+	<form action="php/addtorrent.php?" id="addTorrentUrl" method="post" target="uploadFrame">
+		<label id="torrentURL"></label>
+		<input type="text" id="url" name="url"><br>
+		<button type="submit" id="addUrl" class="btn" onclick="history.go(-1);"></button>
+	</form>
+	<hr>
+	<form action="php/addtorrent.php?" id="addTorrentFile" method="post" enctype="multipart/form-data" target="uploadFrame">
+		<input type="file" name="torrent_file" id="torrent_file" style='height:auto;line-height:auto;'>
+		<label class="control-label" for='dir_edit' id="dirLabel"></label>
+		<input type="text" id="dir_edit" name="dir_edit">
+		<label class="control-label" for='tadd_label' id="addLabelLabel"></label>
+		<input type="text" id="tadd_label" name="tadd_label">
+		<label class="checkbox" id='notAddPath'>
+			<input type="checkbox" name="not_add_path" id="not_add_path">
+		</label>
+		<label class="checkbox" id='startStopped'>
+			<input type="checkbox" name="torrents_start_stopped" id="torrents_start_stopped">
+		</label>
+		<label class="checkbox" id='fastResume'>
+			<input type="checkbox" name="fast_resume" id="fast_resume">
+		</label>
+		<button type="submit" class="btn btn-primary" id='torrentFileSend' onclick="history.go(-1);"></button>
+	</form>
+</div>
+<div class="mainContainer" id="confimTorrentDelete" style="display:none;">
+	<center>
+		<h5 style="margin-top:40px;"></h5>
+		<button id="deleteOk" onclick="mobile.deleteConfimed();" class="btn btn-primary"></button>
+		<button id="deleteCancel" onclick="history.go(-1);" class="btn"></button>
+	</center>
+</div>

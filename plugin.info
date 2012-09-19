@@ -1,0 +1,6 @@
+description: Mobile version of ruTorrent
+author: zebraxxl
+version: 0.1
+need_rtorrent: 1
+remote: warring
+runlevel: 15
