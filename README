@@ -1,0 +1,8 @@
+INSTALLATION
+Jast copy folder with plugin to rutorrent/plugins
+
+CONFIG
+As it only beta auto detect of mobile device turned off. To enable it edit 'init.js' file. In first line change 'plugin.enableAutodetect = false;' to 'plugin.enableAutodetect = true;'.
+
+USING
+If you enabled autodetect plugin will automaticaly load when detecting mobile device. Another way is adding '?mobile=1' to url of rutorrent.

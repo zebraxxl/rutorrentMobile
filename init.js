@@ -1,4 +1,4 @@
-plugin.enableAutodetect = true;
+plugin.enableAutodetect = false;
 
 plugin.statusFilter = {downloading: 1, completed: 2, all: 3};
 plugin.torrents = null;
