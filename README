@@ -4,6 +4,7 @@ If you want to use 'Delete with data', you also need to install 'erasedata' plug
 
 CONFIG
 As it only beta auto detect of mobile device turned off. To enable it edit 'init.js' file. In first line change 'plugin.enableAutodetect = false;' to 'plugin.enableAutodetect = true;'.
+If in rutorrent you turned off 'Confim when deleting' mobile version will not confim too. In this case decision about deleting data will be taken depending on the parameter 'plugin.eraseWithDataDefault' (see below).
 
 Another options:
 plugin.eraseWithDataDefault - default state of delete with data checkbox. Values:

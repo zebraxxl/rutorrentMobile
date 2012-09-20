@@ -230,11 +230,16 @@ plugin.delete = function() {
 	if (this.torrent == undefined)
 		this.showList();
 	else {
-		$('#confimTorrentDelete h5').text(theUILang.areYouShure + ' ' + this.torrent.name);
-		if ((this.eraseWithDataLoaded) && (this.eraseWithDataDefault != undefined)) {
-				$('#deleteWithData input').attr('checked', this.eraseWithDataDefault);
-		};
-		this.showPage('confimTorrentDelete');
+
+		if (theWebUI.settings["webui.confirm_when_deleting"]) {
+			$('#confimTorrentDelete h5').text(theUILang.areYouShure + ' ' + this.torrent.name);
+			if ((this.eraseWithDataLoaded) && (this.eraseWithDataDefault != undefined)) {
+					$('#deleteWithData input').attr('checked', this.eraseWithDataDefault);
+			}
+			this.showPage('confimTorrentDelete');
+		} else {
+			this.deleteConfimed();
+		}
 	}
 };
 
