@@ -316,7 +316,6 @@ plugin.init = function() {
 				$('body').html(data);
 
 				$('link[rel=stylesheet]').remove();
-				$('head').append('<link href="./css/stable.css" rel="stylesheet" type="text/css">');
 				plugin.loadMainCSS();
 				plugin.loadCSS('css/bootstrap.min');
 				injectScript(this.path+'js/bootstrap.min.js');
