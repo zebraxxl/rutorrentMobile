@@ -1,4 +1,4 @@
-plugin.enableAutodetect = false;
+plugin.enableAutodetect = true;
 
 plugin.statusFilter = {downloading: 1, completed: 2, all: 3};
 plugin.torrents = null;
@@ -269,13 +269,9 @@ plugin.init = function() {
 	if (start) {
 		this.lastHref = window.location.href;
 
-		this.loadMainCSS();
-		this.loadCSS('css/bootstrap.min');
-		injectScript(this.path+'js/bootstrap.min.js');
-
 		setInterval(function() {plugin.backListener();}, 500);
 
-		$("body").html('');
+		//$("body").html(''); NEED TEST
 
 		$.ajax({
 			type: 'GET',
@@ -288,6 +284,12 @@ plugin.init = function() {
 
 			success: function(data, textStatus) {
 				$('body').html(data);
+
+				$('link[rel=stylesheet]').remove();
+				$('head').append('<link href="./css/stable.css" rel="stylesheet" type="text/css">');
+				plugin.loadMainCSS();
+				plugin.loadCSS('css/bootstrap.min');
+				injectScript(this.path+'js/bootstrap.min.js');
 
 				$('.torrentControl').css('display', 'none');
 
