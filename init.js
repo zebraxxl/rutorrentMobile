@@ -1,4 +1,5 @@
 plugin.enableAutodetect = true;
+plugin.eraseWithDataDefault = false;
 
 plugin.statusFilter = {downloading: 1, completed: 2, all: 3};
 plugin.torrents = null;
@@ -6,6 +7,7 @@ plugin.torrent = undefined;
 plugin.lastHref = "";
 plugin.currFilter = plugin.statusFilter.all;
 plugin.labelInEdit = false;
+plugin.eraseWithDataLoaded = false;
 
 var pageToHash = {
 	'torrentsList': '',
@@ -229,12 +231,19 @@ plugin.delete = function() {
 		this.showList();
 	else {
 		$('#confimTorrentDelete h5').text(theUILang.areYouShure + ' ' + this.torrent.name);
+		if ((this.eraseWithDataLoaded) && (this.eraseWithDataDefault != undefined)) {
+				$('#deleteWithData input').attr('checked', this.eraseWithDataDefault);
+		};
 		this.showPage('confimTorrentDelete');
 	}
 };
 
 plugin.deleteConfimed = function() {
-	this.request('?action=remove&hash=' + this.torrent.hash);
+	if ((this.eraseWithDataLoaded) && ($('#deleteWithData input').attr('checked'))) {
+		this.request('?action=removewithdata&hash=' + this.torrent.hash);
+	} else {
+		this.request('?action=remove&hash=' + this.torrent.hash);
+	}
 	this.torrent = undefined;
 	this.showList();
 };
@@ -337,6 +346,15 @@ plugin.init = function() {
 				$('#torrentFileSend').text(theUILang.add_button);
 
 				plugin.loadLang();
+
+				if (rTorrentStub.prototype.removewithdata != undefined) {
+					$('#confimTorrentDelete h5').after(
+						'<label class="checkbox inline" id="deleteWithData" style="margin-bottom:5px;">' +
+						'<input type="checkbox" style="margin-bottom:5px;"> ' + theUILang.Delete_data + '</label><br/>');
+
+					plugin.eraseWithDataLoaded = true;
+				}
+
 				plugin.update();
 			}
 		});
