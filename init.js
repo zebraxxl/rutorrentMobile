@@ -5,6 +5,7 @@ plugin.torrents = null;
 plugin.torrent = undefined;
 plugin.lastHref = "";
 plugin.currFilter = plugin.statusFilter.all;
+plugin.labelInEdit = false;
 
 var pageToHash = {
 	'torrentsList': '',
@@ -26,7 +27,8 @@ var detailsIdToLangId = {
 	'uploaded' : "Uploaded",
 	'uploadSpeed' : "Ul_speed",
 	'seeds' : "Seeds",
-	'peers' : "Peers"
+	'peers' : "Peers",
+	'label' : 'Label'
 };
 
 plugin.backListener = function() {
@@ -121,6 +123,14 @@ plugin.addTorrent = function() {
 	this.showPage('addTorrent');
 };
 
+plugin.fillLabel = function(label) {
+	if (this.labelInEdit)
+		return;
+
+	$('#torrentDetails #label td:last').text(label + ' ')
+		.append('<button class="btn btn-small" type="button" onclick="mobile.editLabel();"><i class="icon-edit"></i></button>');
+};
+
 plugin.fillDetails = function(d) {
 	$('#torrentName').text(d.name);
 
@@ -133,6 +143,7 @@ plugin.fillDetails = function(d) {
 	$('#torrentProgress .bar').text(percent + '%');
 
 	$('#torrentDetails #status td:last').text(theWebUI.getStatusIcon(d)[1]);
+	this.fillLabel(d.label);
 	$('#torrentDetails #done td:last').text(percent + '%');
 	$('#torrentDetails #downloaded td:last').text(theConverter.bytes(d.downloaded,2));
 	$('#torrentDetails #timeElapsed td:last').text(theConverter.time(Math.floor((new Date().getTime()-theWebUI.deltaTime)/1000-iv(d.state_changed)),true));
@@ -144,6 +155,27 @@ plugin.fillDetails = function(d) {
 	$('#torrentDetails #uploadSpeed td:last').text(theConverter.speed(d.ul));
 	$('#torrentDetails #seeds td:last').text(d.seeds_actual + " " + theUILang.of + " " + d.seeds_all + " " + theUILang.connected);
 	$('#torrentDetails #peers td:last').text(d.peers_actual + " " + theUILang.of + " " + d.peers_all + " " + theUILang.connected);
+};
+
+plugin.editLabel = function() {
+	plugin.labelInEdit = true;
+	$('#torrentDetails #label td:last')
+		.html('<div class="input-append">' +
+			'<input class="span2" id="labelEdit" size="16" type="text" value="' + plugin.torrent.label +'" style="margin-right:0;height:15px;"/>' +
+			'<button class="btn"><i class="icon-ok"></i></button></div>');
+	$('#labelEdit').focus();
+	$('#labelEdit').blur(function() {
+		var newLabel = $('#labelEdit').val();
+		plugin.labelInEdit = false;
+		plugin.fillLabel(newLabel);
+
+		if (plugin.torrent.label != newLabel) {
+			plugin.torrent.label = newLabel;
+			plugin.torrents[plugin.torrent.hash].label = newLabel;
+
+			plugin.request('?action=setlabel&hash=' + plugin.torrent.hash + '&s=label&v=' + encodeURIComponent(newLabel));
+		};
+	});
 };
 
 plugin.showDetails = function(e) {
@@ -270,8 +302,6 @@ plugin.init = function() {
 		this.lastHref = window.location.href;
 
 		setInterval(function() {plugin.backListener();}, 500);
-
-		//$("body").html(''); NEED TEST
 
 		$.ajax({
 			type: 'GET',
