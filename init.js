@@ -14,7 +14,8 @@ var pageToHash = {
 	'torrentDetails': 'details',
 	'globalSettings': 'settings',
 	'addTorrent': 'add',
-	'confimTorrentDelete': 'delete'
+	'confimTorrentDelete': 'delete',
+	'detailsTrackers': 'trackers'
 };
 
 var detailsIdToLangId = {
@@ -38,6 +39,11 @@ plugin.backListener = function() {
 		if (window.location.hash == '#details') {
 			if (this.torrent != undefined)
 				this.showDetails(this.torrent.hash);
+		} else if (window.location.hash == '#trackers') {
+			if (this.torrent != undefined) {
+				this.showDetails(this.torrent.hash);
+				this.showTrackersInDetails();
+			}
 		} else if (window.location.hash == '#settings') {
 			this.showSettings();
 		} else if (window.location.hash == '#add') {
@@ -55,13 +61,17 @@ plugin.request = function(url, func) {
 	theWebUI.requestWithTimeout(url, function(d){if (func != undefined) func(d);}, function(){}, function(){});
 };
 
+plugin.setHash = function(page) {
+	window.location.hash = pageToHash[page];
+	this.lastHref = window.location.href;
+	window.scrollTo(0,0);
+}
+
 plugin.showPage = function(page) {
 	$('.mainContainer').css('display', 'none');
 	$('.torrentControl').css('display', 'none');
 	$('#' + page).css('display', 'block');
-	window.location.hash = pageToHash[page];
-	this.lastHref = window.location.href;
-	window.scrollTo(0,0);
+	this.setHash(page);
 };
 
 plugin.showList = function() {
@@ -192,6 +202,68 @@ plugin.showDetails = function(e) {
 
 	this.showPage('torrentDetails');
 	$('.torrentControl').css('display', '');
+	this.showDetailsInDetails();
+};
+
+plugin.showDetailsInDetails = function() {
+	$('.detailsPage').css('display', 'none');
+	$('#detailsDetailsPage').css('display', '');
+	$('#detailsNav li').removeClass('active');
+	$('#detailsDetailsTab').addClass('active');
+	this.setHash('torrentDetails');
+};
+
+plugin.showTrackersInDetails = function() {
+	$('.detailsPage').css('display', 'none');
+	$('#detailsTrackersPage').css('display', '');
+	$('#detailsNav li').removeClass('active');
+	$('#detailsTrackers').addClass('active');
+	this.setHash('detailsTrackers');
+	this.loadTrackers();
+}
+
+plugin.toogleTrackerInfo = function(s) {
+	var block = $(s).parent().find('div');
+	if (block.css('display') == 'none')
+		block.css('display', '');
+	else
+		block.css('display', 'none');
+}
+
+plugin.loadTrackers = function() {
+	if (this.torrent != undefined) {
+		var hash = this.torrent.hash;
+		this.request('?action=gettrackers&hash=' + hash, function(data) {
+			var trackers = data[hash];
+			if (hash == mobile.torrent.hash) {
+				var trackersHtml = '';
+
+				for (var i = 0; i < trackers.length; i++) {
+					trackersHtml +=
+						'<div>' +
+						'<a style="padding: 8px;" href="javascript://void();" onclick="mobile.toogleTrackerInfo(this);">' + trackers[i].name + '</a>' +
+						'<div style="display:none;">' +
+							'<table class=" table table-striped"><tbody>' +
+								'<tr><td>' + theUILang.Type + '</td><td>' + theFormatter.trackerType(trackers[i].type) + '</td></tr>' +
+								'<tr><td>' + theUILang.Enabled + '</td><td>' + theFormatter.yesNo(trackers[i].enabled) + '</td></tr>' +
+								'<tr><td>' + theUILang.Group + '</td><td>' + trackers[i].group + '</td></tr>' +
+								'<tr><td>' + theUILang.Seeds + '</td><td>' + trackers[i].seeds + '</td></tr>' +
+								'<tr><td>' + theUILang.Peers + '</td><td>' + trackers[i].peers + '</td></tr>' +
+								'<tr><td>' + theUILang.scrapeDownloaded + '</td><td>' + trackers[i].downloaded + '</td></tr>' +
+								'<tr><td>' + theUILang.scrapeUpdate + '</td><td>' +
+									(trackers[i].last ? theConverter.time($.now() / 1000 - trackers[i].last - theWebUI.deltaTime / 1000, true) : '') +
+									'</td></tr>' +
+								'<tr><td>' + theUILang.trkInterval + '</td><td>' + theConverter.time(trackers[i].interval) + '</td></tr>' +
+								'<tr><td>' + theUILang.trkPrivate + '</td><td>' + theFormatter.yesNo(theWebUI.trkIsPrivate(trackers[i].name)) + '</td></tr>' +
+							'</tbody></table>' +
+						'</div></div><hr>';
+				}
+
+				trackersHtml += '';
+				$('#detailsTrackersPage').html(trackersHtml);
+			}
+		});
+	}
 };
 
 plugin.start = function() {
@@ -332,7 +404,7 @@ plugin.init = function() {
 				$('link[rel=stylesheet]').remove();
 				plugin.loadMainCSS();
 				plugin.loadCSS('css/bootstrap.min');
-				injectScript(this.path+'js/bootstrap.min.js');
+				//injectScript(plugin.path+'js/bootstrap.min.js'); //I want this for accordeon, but jQuery is too old =(
 
 				$('.torrentControl').css('display', 'none');
 
@@ -372,6 +444,9 @@ plugin.onLangLoaded = function() {
 	$('#torrentsAll a').text(theUILang.All);
 	$('#torrentsDownloading a').text(theUILang.Downloading);
 	$('#torrentsCompleted a').text(theUILang.Finished);
+
+	$('#detailsDetailsTab a').text(theUILang.General);
+	$('#detailsTrackers a').text(theUILang.Trackers);
 
 	$('#torrentDetails table tr').each(function(n, v) {
 		$(v).children('td:first').text(theUILang[detailsIdToLangId[v.id]]);

@@ -44,7 +44,15 @@
 	<div class="progress progress-striped" id="torrentProgress">
 		<div class="bar"></div>
 	</div>
-	<table class="table table-striped">
+	<ul class="nav nav-tabs" id="detailsNav">
+		<li class="active" id="detailsDetailsTab">
+			<a href="javascript://void();" onclick="mobile.showDetailsInDetails();"></a>
+		</li>
+		<li id="detailsTrackers">
+			<a href="javascript://void();" onclick="mobile.showTrackersInDetails();"></a>
+		</li>
+	</ul>
+	<table class="table table-striped detailsPage" id="detailsDetailsPage">
 		<tbody>
 			<tr id="status"><td></td><td></td></tr>
 			<tr id="label"><td></td><td></td></tr>
@@ -61,6 +69,8 @@
 			<tr id="peers"><td></td><td></td></tr>
 		</tbody>
 	</table>
+	<div class="detailsPage" id="detailsTrackersPage">
+	</div>
 </div>
 <div class="mainContainer" id="globalSettings" style="display:none;">
 	<label class="select">
