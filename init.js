@@ -33,6 +33,13 @@ var detailsIdToLangId = {
 	'label' : 'Label'
 };
 
+plugin.toogleDisplay = function(s) {
+	if (s.css('display') == 'none')
+		s.css('display', '')
+	else
+		s.css('display', 'none');
+}
+
 plugin.backListener = function() {
 	if (this.lastHref != window.location.href) {
 		if (window.location.hash == '#details') {
@@ -214,12 +221,16 @@ plugin.showTrackersInDetails = function() {
 	this.loadTrackers();
 }
 
+plugin.showFilesInDetails = function() {
+	$('.detailsPage').css('display', 'none');
+	$('#detailsFilesPage').css('display', '');
+	$('#detailsNav li').removeClass('active');
+	$('#detailsFiles').addClass('active');
+	this.loadFiles();
+}
+
 plugin.toogleTrackerInfo = function(s) {
-	var block = $(s).parent().find('div');
-	if (block.css('display') == 'none')
-		block.css('display', '');
-	else
-		block.css('display', 'none');
+	this.toogleDisplay($(s).parent().find('div'));
 }
 
 plugin.loadTrackers = function() {
@@ -233,7 +244,7 @@ plugin.loadTrackers = function() {
 				for (var i = 0; i < trackers.length; i++) {
 					trackersHtml +=
 						'<div>' +
-						'<a style="padding: 8px;" href="javascript://void();" onclick="mobile.toogleTrackerInfo(this);">' + trackers[i].name + '</a>' +
+						'<a style="padding: 5px;" href="javascript://void();" onclick="mobile.toogleTrackerInfo(this);">' + trackers[i].name + '</a>' +
 						'<div style="display:none;">' +
 							'<table class=" table table-striped"><tbody>' +
 								'<tr><td>' + theUILang.Type + '</td><td>' + theFormatter.trackerType(trackers[i].type) + '</td></tr>' +
@@ -257,6 +268,88 @@ plugin.loadTrackers = function() {
 		});
 	}
 };
+
+plugin.files = undefined;
+plugin.drawFiles = function(p) {
+	var path = p.split('/');
+	if ((path[0] == '') && (path.length == 1))
+		path = [];
+
+	var dir = plugin.files;
+	var realPath = '';
+	for (var i = 0; i < path.length; i++) {
+		if (path[i] == '')
+			continue;
+
+		if ((dir.container[path[i]] != undefined) && (dir.container[path[i]].directory)) {
+			dir = dir.container[path[i]];
+			realPath += '/' + path[i];
+		} else {
+			break;
+		}
+	}
+
+	realPath = realPath.substr(1);
+
+	var filesHtml = '';
+
+	if (!dir.root) {
+		var i = realPath.lastIndexOf('/');
+		if (i < 0)
+			i = 0;
+		var upperDir = realPath.substr(0, i);
+		filesHtml += '<a href="javascript://void();" onclick="mobile.drawFiles(\'' + upperDir + '\');">' +
+						'<i class="icon-folder-open"></i> ..</a><hr>';
+	}
+
+	for (name in dir.container) {
+		if (dir.container[name].directory) {
+			filesHtml += '<a href="javascript://void();" onclick="mobile.drawFiles(\'' + realPath + '/' + name + '\');">' +
+				'<i class="icon-folder-open"></i>&nbsp;' + name + '</a><hr>';
+		} else {
+			var idName = 'file' + dir.container[name].id;
+			filesHtml += '<a href="javascript://void();" onclick="mobile.toogleDisplay($(\'#' + idName + '\'));">' +
+				'<i class="icon-file"></i>&nbsp;' + name + '</a><div style="display:none;" id="' + idName + '">' +
+				'<table class="table table-striped"><tbody>' +
+					'<tr><td>' + theUILang.Done + '</td><td>' + theConverter.bytes(dir.container[name].done) + '</td></tr>' +
+					'<tr><td>' + theUILang.Size + '</td><td>' + theConverter.bytes(dir.container[name].size) + '</td></tr>' +
+				'</tbody></table></div><hr>';
+		}
+	}
+
+	$('#detailsFilesPage').html(filesHtml);
+}
+
+plugin.loadFiles = function() {
+	if (this.torrent != undefined) {
+		var hash = this.torrent.hash;
+		$('#detailsFilesPage').html('');
+		this.request('?action=getfiles&hash=' + hash, function(data) {
+			var rawFiles = data[hash];
+			var files = {root: true, directory: true, container: {}};
+
+			for (var i = 0; i < rawFiles.length; i++) {
+				var path = rawFiles[i].name.split('/');
+
+				var currDir = files;
+				for (var j = 0; j < path.length -1; j++) {
+					if (currDir.container[path[j]] == undefined)
+						currDir.container[path[j]] = {directory: true, root: false, container: {}};
+					currDir = currDir.container[path[j]];
+				}
+				currDir.container[path[path.length - 1]] = {root: false,
+					directory: false,
+					size: rawFiles[i].size,
+					done: rawFiles[i].done,
+					id: i
+				};
+			}
+
+			mobile.files = files;
+			mobile.drawFiles('');
+		});
+	}
+}
 
 plugin.start = function() {
 	if (this.torrent != undefined) {
@@ -439,6 +532,7 @@ plugin.onLangLoaded = function() {
 
 	$('#detailsDetailsTab a').text(theUILang.General);
 	$('#detailsTrackers a').text(theUILang.Trackers);
+	$('#detailsFiles a').text(theUILang.Files);
 
 	$('#torrentDetails table tr').each(function(n, v) {
 		$(v).children('td:first').text(theUILang[detailsIdToLangId[v.id]]);
