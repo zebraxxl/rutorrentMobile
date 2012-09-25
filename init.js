@@ -14,8 +14,7 @@ var pageToHash = {
 	'torrentDetails': 'details',
 	'globalSettings': 'settings',
 	'addTorrent': 'add',
-	'confimTorrentDelete': 'delete',
-	'detailsTrackers': 'trackers'
+	'confimTorrentDelete': 'delete'
 };
 
 var detailsIdToLangId = {
@@ -39,11 +38,6 @@ plugin.backListener = function() {
 		if (window.location.hash == '#details') {
 			if (this.torrent != undefined)
 				this.showDetails(this.torrent.hash);
-		} else if (window.location.hash == '#trackers') {
-			if (this.torrent != undefined) {
-				this.showDetails(this.torrent.hash);
-				this.showTrackersInDetails();
-			}
 		} else if (window.location.hash == '#settings') {
 			this.showSettings();
 		} else if (window.location.hash == '#add') {
@@ -210,7 +204,6 @@ plugin.showDetailsInDetails = function() {
 	$('#detailsDetailsPage').css('display', '');
 	$('#detailsNav li').removeClass('active');
 	$('#detailsDetailsTab').addClass('active');
-	this.setHash('torrentDetails');
 };
 
 plugin.showTrackersInDetails = function() {
@@ -218,7 +211,6 @@ plugin.showTrackersInDetails = function() {
 	$('#detailsTrackersPage').css('display', '');
 	$('#detailsNav li').removeClass('active');
 	$('#detailsTrackers').addClass('active');
-	this.setHash('detailsTrackers');
 	this.loadTrackers();
 }
 
