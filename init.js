@@ -1,5 +1,6 @@
 plugin.enableAutodetect = true;
 plugin.eraseWithDataDefault = false;
+plugin.navBarToBottom = true;
 
 plugin.statusFilter = {downloading: 1, completed: 2, all: 3};
 plugin.torrents = null;
@@ -490,6 +491,14 @@ plugin.init = function() {
 				plugin.loadMainCSS();
 				plugin.loadCSS('css/bootstrap.min');
 				//injectScript(plugin.path+'js/bootstrap.min.js'); //I want this for accordeon, but jQuery is too old =(
+
+				if (mobile.navBarToBottom) {
+					$('#mainNavbar').addClass('navbar-fixed-bottom');
+					$('#mainContainer').css('padding-bottom', '46px');
+				} else {
+					$('#mainNavbar').addClass('navbar-fixed-top');
+					$('#mainContainer').css('padding-top', '46px');
+				}
 
 				$('.torrentControl').css('display', 'none');
 

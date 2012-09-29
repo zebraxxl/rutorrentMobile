@@ -1,7 +1,11 @@
 html, body {
-	background-color: #fff;
 	overflow: visible;
-	padding: 23px 3px 3px 3px;
+}
+
+#mainContainer {
+	background-color: #fff;
+	padding: 3px 3px 3px 3px;
+	margin: 0;
 };
 #detailsFilesPage a {
 	padding: 3px;
