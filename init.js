@@ -442,11 +442,11 @@ plugin.update = function() {
 				if (plugin.labelIds[l] == undefined)
 					plugin.labelIds[l] = nextLabelId++;
 
-				if (plugin.bootstrapJS)
+				//if (plugin.bootstrapJS)
 					labelsHtml += '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.label, this, \'' + l + '\');">' +
 						l + ' (' + plugin.labels[l] + ')</a></li>';
 			}
-			if (plugin.bootstrapJS)
+			//if (plugin.bootstrapJS)
 				$('#torrentsLabels ul').html(labelsHtml);
 
 			var listHtml = '<table class="table table table-striped"><tbody>';
@@ -533,13 +533,18 @@ plugin.init = function() {
 				if (plugin.bootstrapJS)
 					injectScript(plugin.path+'js/bootstrap.min.js');
 
-				if (plugin.bootstrapJS) {
-					$('#torrentsList ul').append(
-						'<li id="torrentsLabels" class="dropdown">' +
-							'<a href="javascript://void();" class="dropdown-toggle" data-toggle="dropdown">' +
-								theUILang.Labels + '<b class="caret"></b></a>' +
-							'<ul class="dropdown-menu" style="margin-top:0px;"></ul></li>'
-						);
+				if (!plugin.bootstrapJS) {
+					$('#torrentsLabels > a').click(function(){
+						var menu = $('#torrentsLabels');
+
+						if (menu.hasClass('open'))
+							menu.removeClass('open');
+						else
+							menu.addClass('open');
+					});
+					$('#torrentsLabels > ul').click(function() {
+						$('#torrentsLabels').removeClass('open');
+					});
 				}
 
 				if (mobile.navBarToBottom) {
@@ -585,9 +590,10 @@ plugin.init = function() {
 };
 
 plugin.onLangLoaded = function() {
-	$('#torrentsAll a').text(theUILang.All);
-	$('#torrentsDownloading a').text(theUILang.Downloading);
-	$('#torrentsCompleted a').text(theUILang.Finished);
+	$('#torrentsAll > a').text(theUILang.All);
+	$('#torrentsDownloading > a').text(theUILang.Downloading);
+	$('#torrentsCompleted > a').text(theUILang.Finished);
+	$('#torrentsLabels > a').html(theUILang.Labels + ' <b class="caret"></b>')
 
 	$('#detailsDetailsTab a').text(theUILang.General);
 	$('#detailsTrackers a').text(theUILang.Trackers);
