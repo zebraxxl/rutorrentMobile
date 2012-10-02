@@ -9,6 +9,7 @@ plugin.lastHref = "";
 plugin.currFilter = plugin.statusFilter.all;
 plugin.labelInEdit = false;
 plugin.eraseWithDataLoaded = false;
+plugin.bootstrapJS = false;
 
 var pageToHash = {
 	'torrentsList': '',
@@ -475,6 +476,13 @@ plugin.init = function() {
 
 		setInterval(function() {plugin.backListener();}, 500);
 
+		var jQueryVer = jQuery.fn.jquery.split('.');
+		if ((jQueryVer[0] == 1) && (jQueryVer[1] >= 7))
+			this.bootstrapJS = true;
+		else if (jQueryVer[0] > 1)
+			this.bootstrapJS = true;	//For future =)
+
+
 		$.ajax({
 			type: 'GET',
 			url: this.path + 'mobile.html',
@@ -490,7 +498,8 @@ plugin.init = function() {
 				$('link[rel=stylesheet]').remove();
 				plugin.loadMainCSS();
 				plugin.loadCSS('css/bootstrap.min');
-				//injectScript(plugin.path+'js/bootstrap.min.js'); //I want this for accordeon, but jQuery is too old =(
+				if (plugin.bootstrapJS)
+					injectScript(plugin.path+'js/bootstrap.min.js');
 
 				if (mobile.navBarToBottom) {
 					$('#mainNavbar').addClass('navbar-fixed-bottom');
