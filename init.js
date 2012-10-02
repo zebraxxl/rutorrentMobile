@@ -1,6 +1,7 @@
 plugin.enableAutodetect = true;
 plugin.eraseWithDataDefault = false;
 plugin.navBarToBottom = true;
+plugin.getDirEnabled = true;
 
 plugin.statusFilter = {downloading: 1, completed: 2, label: 4, all: 3};
 plugin.labelFilter = undefined;
@@ -11,6 +12,7 @@ plugin.lastHref = "";
 plugin.currFilter = plugin.statusFilter.all;
 plugin.labelInEdit = false;
 plugin.eraseWithDataLoaded = false;
+plugin.getDirLoaded = false;
 plugin.bootstrapJS = false;
 
 var pageToHash = {
@@ -90,14 +92,14 @@ plugin.filter = function(f, self, l) {
 		this.labelFilter = l;
 		if (l == '')
 			l = theUILang.No_label;
-		$('#torrentsLabels > a').html(l + '<b class="caret"></b>');
+		$('#torrentsLabels > a').html(l + ' <b class="caret"></b>');
 		$('#torrentsList ul li').removeClass('active');
 		$('#torrentsLabels').addClass('active');
 	} else {
 		var downloadingDisplay = (f & this.statusFilter.downloading) != 0 ? '' : 'none';
 		var completedDisplay = (f & this.statusFilter.completed) != 0 ? '' : 'none';
 
-		$('#torrentsLabels > a').html(theUILang.Labels + '<b class="caret"></b>');
+		$('#torrentsLabels > a').html(theUILang.Labels + ' <b class="caret"></b>');
 		$('.statusDownloading').css({display: downloadingDisplay});
 		$('.statusCompleted').css({display: completedDisplay});
 
@@ -579,6 +581,15 @@ plugin.init = function() {
 						'<input type="checkbox" style="margin-bottom:5px;"> ' + theUILang.Delete_data + '</label><br/>');
 
 					plugin.eraseWithDataLoaded = true;
+				}
+
+				if ((plugin.getDirEnabled) &&(theWebUI.rDirBrowser != undefined)) {
+					plugin.getDirLoaded = true;
+
+					$('#dirEditBlock').append('<input type="button" class="btn" id="showGetDir" type="button"></input>');
+
+					plugin.dirBrowser = new theWebUI.rDirBrowser('addTorrent', 'dir_edit', 'showGetDir', 'getDirFrame', false);
+					$('#getDirFrame')
 				}
 
 				plugin.update();

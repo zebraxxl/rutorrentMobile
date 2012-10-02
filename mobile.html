@@ -105,7 +105,9 @@
 		<form action="php/addtorrent.php?" id="addTorrentFile" method="post" enctype="multipart/form-data" target="uploadFrame">
 			<input type="file" name="torrent_file" id="torrent_file" style='height:auto;line-height:auto;'>
 			<label class="control-label" for='dir_edit' id="dirLabel"></label>
-			<input type="text" id="dir_edit" name="dir_edit">
+			<div class="input-append" id="dirEditBlock">
+				<input type="text" id="dir_edit" name="dir_edit" style="margin-right:0px;">
+			</div>
 			<label class="control-label" for='tadd_label' id="addLabelLabel"></label>
 			<input type="text" id="tadd_label" name="tadd_label">
 			<label class="checkbox" id='notAddPath'>
