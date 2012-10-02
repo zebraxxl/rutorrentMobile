@@ -2,8 +2,10 @@ plugin.enableAutodetect = true;
 plugin.eraseWithDataDefault = false;
 plugin.navBarToBottom = true;
 
-plugin.statusFilter = {downloading: 1, completed: 2, all: 3};
+plugin.statusFilter = {downloading: 1, completed: 2, label: 4, all: 3};
+plugin.labelFilter = undefined;
 plugin.torrents = null;
+plugin.labels = null;
 plugin.torrent = undefined;
 plugin.lastHref = "";
 plugin.currFilter = plugin.statusFilter.all;
@@ -81,16 +83,28 @@ plugin.showList = function() {
 	this.showPage('torrentsList');
 };
 
-plugin.filter = function(f, self) {
-	var downloadingDisplay = (f & this.statusFilter.downloading) != 0 ? '' : 'none';
-	var completedDisplay = (f & this.statusFilter.completed) != 0 ? '' : 'none';
-
-	$('.statusDownloading').css({display: downloadingDisplay});
-	$('.statusCompleted').css({display: completedDisplay});
-
-	if (self != undefined) {
+plugin.filter = function(f, self, l) {
+	if (f == this.statusFilter.label) {
+		$('.torrentBlock').css('display', 'none');
+		$('.label' + this.labelIds[l]).css('display', '');
+		this.labelFilter = l;
+		if (l == '')
+			l = theUILang.No_label;
+		$('#torrentsLabels > a').html(l + '<b class="caret"></b>');
 		$('#torrentsList ul li').removeClass('active');
-		$(self).parent().addClass('active');
+		$('#torrentsLabels').addClass('active');
+	} else {
+		var downloadingDisplay = (f & this.statusFilter.downloading) != 0 ? '' : 'none';
+		var completedDisplay = (f & this.statusFilter.completed) != 0 ? '' : 'none';
+
+		$('#torrentsLabels > a').html(theUILang.Labels + '<b class="caret"></b>');
+		$('.statusDownloading').css({display: downloadingDisplay});
+		$('.statusCompleted').css({display: completedDisplay});
+
+		if (self != undefined) {
+			$('#torrentsList ul li').removeClass('active');
+			$(self).parent().addClass('active');
+		}
 	}
 	this.currFilter = f;
 };
@@ -416,6 +430,24 @@ plugin.update = function() {
 	theWebUI.requestWithTimeout("?list=1&getmsg=1",
 		function(data) {
 			plugin.torrents = data.torrents;
+			plugin.labels = data.labels;
+
+			var labelsHtml = '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.label, this, \'\');">' +
+				theUILang.No_label + '</a></li>';
+			var nextLabelId = 1;
+			plugin.labelIds = {};
+			plugin.labelIds[''] = 0;
+
+			for(var l in plugin.labels) {
+				if (plugin.labelIds[l] == undefined)
+					plugin.labelIds[l] = nextLabelId++;
+
+				if (plugin.bootstrapJS)
+					labelsHtml += '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.label, this, \'' + l + '\');">' +
+						l + ' (' + plugin.labels[l] + ')</a></li>';
+			}
+			if (plugin.bootstrapJS)
+				$('#torrentsLabels ul').html(labelsHtml);
 
 			var listHtml = '<table class="table table table-striped"><tbody>';
 
@@ -427,7 +459,7 @@ plugin.update = function() {
 				v.hash = n;
 
 				listHtml +=
-					'<tr id="' + n + '" class="torrentBlock status' + statusClass + '" onclick="mobile.showDetails(this.id);"><td>' +
+					'<tr id="' + n + '" class="torrentBlock status' + statusClass + ' label' + plugin.labelIds[v.label] + '" onclick="mobile.showDetails(this.id);"><td>' +
 						'<h5>' + v.name + '</h5>' + status[1] +
 						'<div class="progress progress-striped' + ((v.done == 1000) ? '' : ' active') + '">' +
 							'<div class="bar" style="width: ' + percent + '%;">' + percent + '%</div>' +
@@ -438,7 +470,7 @@ plugin.update = function() {
 			listHtml += '</tbody></table>';
 
 			$('#torrentsList #list').html(listHtml);
-			plugin.filter(plugin.currFilter);
+			plugin.filter(plugin.currFilter, undefined, labelFilter);
 
 			if (plugin.torrent != undefined) {
 				if (plugin.torrents[plugin.torrent.hash] != undefined) {
@@ -500,6 +532,15 @@ plugin.init = function() {
 				plugin.loadCSS('css/bootstrap.min');
 				if (plugin.bootstrapJS)
 					injectScript(plugin.path+'js/bootstrap.min.js');
+
+				if (plugin.bootstrapJS) {
+					$('#torrentsList ul').append(
+						'<li id="torrentsLabels" class="dropdown">' +
+							'<a href="javascript://void();" class="dropdown-toggle" data-toggle="dropdown">' +
+								theUILang.Labels + '<b class="caret"></b></a>' +
+							'<ul class="dropdown-menu" style="margin-top:0px;"></ul></li>'
+						);
+				}
 
 				if (mobile.navBarToBottom) {
 					$('#mainNavbar').addClass('navbar-fixed-bottom');

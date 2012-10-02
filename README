@@ -2,6 +2,15 @@ INSTALLATION
 Jast copy folder with plugin to rutorrent/plugins.
 If you want to use 'Delete with data', you also need to install 'erasedata' plugin.
 
+Some features may not be available because of old version jquery (1.5.1) included in rutorrent if you downloaded it by archive. There are two solutions to fix this:
+1. Update only jquery. Download newest version of it from http://jquery.com/download/ (you can download minified version) and put it to rutorrent\js\jquery.js with overwrite.
+2. Use svn version of rutorrent
+
+Both solutions can make you rutorrent unstable. Use it for your own risk.
+
+Features that can't work with old jquery:
+* Filter by labels
+
 CONFIG
 By default auto detect of mobile device turned on. To disable it edit 'init.js' file. In first line change 'plugin.enableAutodetect = true;' to 'plugin.enableAutodetect = false;'.
 If in rutorrent you turned off 'Confim when deleting' mobile version will not confim too. In this case decision about deleting data will be taken depending on the parameter 'plugin.eraseWithDataDefault' (see below).
