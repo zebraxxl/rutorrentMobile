@@ -20,7 +20,8 @@ var pageToHash = {
 	'torrentDetails': 'details',
 	'globalSettings': 'settings',
 	'addTorrent': 'add',
-	'confimTorrentDelete': 'delete'
+	'confimTorrentDelete': 'delete',
+	'torrentUploadstatus': 'status'
 };
 
 var detailsIdToLangId = {
@@ -77,7 +78,7 @@ plugin.setHash = function(page) {
 plugin.showPage = function(page) {
 	$('.mainContainer').css('display', 'none');
 	$('.torrentControl').css('display', 'none');
-	$('#' + page).css('display', 'block');
+	$('#' + page).css('display', '');
 	this.setHash(page);
 };
 
@@ -574,6 +575,22 @@ plugin.init = function() {
 				$('#torrentFileSend').text(theUILang.add_button);
 
 				plugin.loadLang();
+
+				$('#uploadFrame').load(function() {
+					var d = (this.contentDocument || this.contentWindow.document);
+
+					if(d && (d.location.href != "about:blank")) {
+						var matchedRegex = d.body.innerHTML.match(/log\(([\S]+)\)/);
+						if (matchedRegex != null) {
+							var message = '';
+							try {message = eval(matchedRegex[1]);} catch(e) { }
+							if (message != '') {
+								$('#uploadStatusText').text(message);
+								plugin.showPage('torrentUploadstatus');
+							}
+						}
+					}
+				});
 
 				if (rTorrentStub.prototype.removewithdata != undefined) {
 					$('#confimTorrentDelete h5').after(
