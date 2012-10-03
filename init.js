@@ -606,7 +606,15 @@ plugin.init = function() {
 					$('#dirEditBlock').append('<input type="button" class="btn" id="showGetDir" type="button"></input>');
 
 					plugin.dirBrowser = new theWebUI.rDirBrowser('addTorrent', 'dir_edit', 'showGetDir', 'getDirFrame', false);
-					$('#getDirFrame')
+					$('#showGetDir').click(function() {
+						$('#getDirFrame').css({
+							'width': '254px',
+							'border-radius': '8px'
+						}).load(function() {
+							var d = (this.contentDocument || this.contentWindow.document);
+							d.head.innerHTML += '<style>td{font-size:14px;padding:5px 0 5px 0;}</style>';
+						});
+					});
 				}
 
 				plugin.update();
