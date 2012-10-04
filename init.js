@@ -21,7 +21,8 @@ var pageToHash = {
 	'globalSettings': 'settings',
 	'addTorrent': 'add',
 	'confimTorrentDelete': 'delete',
-	'torrentUploadstatus': 'status'
+	'torrentUploadstatus': 'status',
+	'getDirList': 'filesystem'
 };
 
 var detailsIdToLangId = {
@@ -429,6 +430,51 @@ plugin.deleteConfimed = function() {
 	this.showList();
 };
 
+plugin.chooseGetDir = function(path) {
+	$('#dir_edit').val(path);
+	history.go(-1);
+}
+
+plugin.drawGetDir = function(path, first) {
+	$.ajax({
+		url: 'plugins/_getdir/getdirs.php',
+		data: {
+			'btn': '',
+			'edit': '',
+			'frame_id': '',
+			'dir': path,
+			'time': ((new Date()).getTime())
+		},
+
+		success: function(data) {
+			var re = /<td[\s]+code=\'([\S]+?)\'[\s\S]+?>&nbsp;&nbsp;([\s\S]+?)<\/td>/g;
+			var match = null;
+
+			var html = '<table class="table table-striped"><tbody>'
+
+			while ((match = re.exec(data)) != null) {
+				if (match[2] == '.') {
+					html = '<button class="btn pull-right" onclick="mobile.chooseGetDir(\'' + decodeURIComponent(match[1]) + '\');">' + theUILang.Choose + '</button>' +
+						'<h5 style="padding:8px;">' + decodeURIComponent(match[1]) + '</h5>' + html;
+				} else {
+					html += '<tr onclick="mobile.drawGetDir(\'' + decodeURIComponent(match[1]) + '\');">' +
+						'<td style="padding:14px;"><i class="icon-folder-open"></i> ' + match[2] + '</td></tr>';
+				}
+			}
+
+			html += '</tbody></table>';
+			$('#getDirList').html(html);
+
+			if (first === true)
+				mobile.showPage('getDirList');
+		}
+	});
+};
+
+plugin.showGetDir = function() {
+	this.drawGetDir('', true);
+};
+
 plugin.update = function() {
 	theWebUI.requestWithTimeout("?list=1&getmsg=1",
 		function(data) {
@@ -603,18 +649,7 @@ plugin.init = function() {
 				if ((plugin.getDirEnabled) &&(theWebUI.rDirBrowser != undefined)) {
 					plugin.getDirLoaded = true;
 
-					$('#dirEditBlock').append('<input type="button" class="btn" id="showGetDir" type="button"></input>');
-
-					plugin.dirBrowser = new theWebUI.rDirBrowser('addTorrent', 'dir_edit', 'showGetDir', 'getDirFrame', false);
-					$('#showGetDir').click(function() {
-						$('#getDirFrame').css({
-							'width': '254px',
-							'border-radius': '8px'
-						}).load(function() {
-							var d = (this.contentDocument || this.contentWindow.document);
-							d.head.innerHTML += '<style>td{font-size:14px;padding:5px 0 5px 0;}</style>';
-						});
-					});
+					$('#dirEditBlock').append('<input type="button" class="btn" id="showGetDir" type="button" onclick="mobile.showGetDir();" value="..."></input>');
 				}
 
 				plugin.update();

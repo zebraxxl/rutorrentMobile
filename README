@@ -19,4 +19,4 @@ USING
 If you enabled autodetect plugin will automaticaly load when detecting mobile device. Another way is adding '?mobile=1' to the end of rutorrent url.
 
 LOCALIZATION
-For now plugin localized only on two languages: english and russian. For another languages will using english. But there are only one plugin specific string for now. Because of this I don't think that it will be big problem to use plugin on another languages.
+For now plugin localized only on two languages: english and russian. For another languages will using english. But there are only two plugin specific string for now. Because of this I don't think that it will be big problem to use plugin on another languages.
