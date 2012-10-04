@@ -259,31 +259,39 @@ plugin.loadTrackers = function() {
 		this.request('?action=gettrackers&hash=' + hash, function(data) {
 			var trackers = data[hash];
 			if (hash == mobile.torrent.hash) {
-				var trackersHtml = '';
+				var trackersHtml = '<div class="accordion" id="trackersAccordion">';
 
 				for (var i = 0; i < trackers.length; i++) {
 					trackersHtml +=
-						'<div>' +
-						'<a style="padding: 5px;" href="javascript://void();" onclick="mobile.toogleTrackerInfo(this);">' + trackers[i].name + '</a>' +
-						'<div style="display:none;">' +
-							'<table class=" table table-striped"><tbody>' +
-								'<tr><td>' + theUILang.Type + '</td><td>' + theFormatter.trackerType(trackers[i].type) + '</td></tr>' +
-								'<tr><td>' + theUILang.Enabled + '</td><td>' + theFormatter.yesNo(trackers[i].enabled) + '</td></tr>' +
-								'<tr><td>' + theUILang.Group + '</td><td>' + trackers[i].group + '</td></tr>' +
-								'<tr><td>' + theUILang.Seeds + '</td><td>' + trackers[i].seeds + '</td></tr>' +
-								'<tr><td>' + theUILang.Peers + '</td><td>' + trackers[i].peers + '</td></tr>' +
-								'<tr><td>' + theUILang.scrapeDownloaded + '</td><td>' + trackers[i].downloaded + '</td></tr>' +
-								'<tr><td>' + theUILang.scrapeUpdate + '</td><td>' +
-									(trackers[i].last ? theConverter.time($.now() / 1000 - trackers[i].last - theWebUI.deltaTime / 1000, true) : '') +
-									'</td></tr>' +
-								'<tr><td>' + theUILang.trkInterval + '</td><td>' + theConverter.time(trackers[i].interval) + '</td></tr>' +
-								'<tr><td>' + theUILang.trkPrivate + '</td><td>' + theFormatter.yesNo(theWebUI.trkIsPrivate(trackers[i].name)) + '</td></tr>' +
-							'</tbody></table>' +
-						'</div></div><hr>';
+						'<div class="accordion-group"><div class="accordion-heading">' +
+								'<a class="accordion-toggle" data-toggle="collapse" data-parent="#trackersAccordion" href="#tracker' + i + '">' +
+									trackers[i].name + '</a></div>' +
+							'<div id="tracker' + i + '" class="accordion-body collapse"><div class="accordion-inner">' +
+								'<table class=" table table-striped"><tbody>' +
+									'<tr><td>' + theUILang.Type + '</td><td>' + theFormatter.trackerType(trackers[i].type) + '</td></tr>' +
+									'<tr><td>' + theUILang.Enabled + '</td><td>' + theFormatter.yesNo(trackers[i].enabled) + '</td></tr>' +
+									'<tr><td>' + theUILang.Group + '</td><td>' + trackers[i].group + '</td></tr>' +
+									'<tr><td>' + theUILang.Seeds + '</td><td>' + trackers[i].seeds + '</td></tr>' +
+									'<tr><td>' + theUILang.Peers + '</td><td>' + trackers[i].peers + '</td></tr>' +
+									'<tr><td>' + theUILang.scrapeDownloaded + '</td><td>' + trackers[i].downloaded + '</td></tr>' +
+									'<tr><td>' + theUILang.scrapeUpdate + '</td><td>' +
+										(trackers[i].last ? theConverter.time($.now() / 1000 - trackers[i].last - theWebUI.deltaTime / 1000, true) : '') +
+										'</td></tr>' +
+									'<tr><td>' + theUILang.trkInterval + '</td><td>' + theConverter.time(trackers[i].interval) + '</td></tr>' +
+									'<tr><td>' + theUILang.trkPrivate + '</td><td>' + theFormatter.yesNo(theWebUI.trkIsPrivate(trackers[i].name)) + '</td></tr>' +
+								'</tbody></table></div></div></div>';
 				}
 
-				trackersHtml += '';
+				trackersHtml += '</div>';
 				$('#detailsTrackersPage').html(trackersHtml);
+
+				if (!plugin.bootstrapJS) {
+					$('#trackersAccordion a').click(function() {
+						$('#trackersAccordion .in').removeClass('in');
+						$(this).parent().parent().find('.accordion-body').addClass('in');
+						return false;
+					});
+				}
 			}
 		});
 	}
