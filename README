@@ -1,7 +1,7 @@
 INSTALLATION
 Jast copy folder with plugin to rutorrent/plugins.
 If you want to use 'Delete with data', you also need to install 'erasedata' plugin.
-If you want to browse directories in add torrent dialog you need '_getdir' plugin (experimental feature, can be turned off).
+If you want to browse directories in add torrent dialog you need '_getdir' plugin.
 
 CONFIG
 By default auto detect of mobile device turned on. To disable it edit 'init.js' file. In first line change 'plugin.enableAutodetect = true;' to 'plugin.enableAutodetect = false;'.
