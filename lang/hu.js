@@ -1,3 +1,3 @@
-theUILang.Choose = 'Choose';
+﻿theUILang.Choose = 'Choose';
 theUILang.areYouShure = 'Do you really want to remove torrent';
 mobile.onLangLoaded();
