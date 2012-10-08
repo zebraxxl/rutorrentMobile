@@ -484,6 +484,7 @@ plugin.showGetDir = function() {
 };
 
 plugin.update = function() {
+	console.log('update');
 	theWebUI.requestWithTimeout("?list=1&getmsg=1",
 		function(data) {
 			plugin.torrents = data.torrents;
@@ -527,7 +528,7 @@ plugin.update = function() {
 			listHtml += '</tbody></table>';
 
 			$('#torrentsList #list').html(listHtml);
-			plugin.filter(plugin.currFilter, undefined, labelFilter);
+			plugin.filter(plugin.currFilter, undefined, plugin.labelFilter);
 
 			if (plugin.torrent != undefined) {
 				if (plugin.torrents[plugin.torrent.hash] != undefined) {
@@ -538,7 +539,7 @@ plugin.update = function() {
 				}
 			}
 
-			setTimeout(function() {plugin.update();}, theWebUI.settings['webui.update_interval']);
+			setTimeout(function() {mobile.update();}, theWebUI.settings['webui.update_interval']);
 		},
 
 		function()
