@@ -10,3 +10,6 @@ html, body {
 #detailsFilesPage a {
 	padding: 3px;
 }
+.hiddenPath {
+	display: none;
+}

@@ -306,7 +306,8 @@ plugin.loadTrackers = function() {
 };
 
 plugin.files = undefined;
-plugin.drawFiles = function(p) {
+
+plugin.getDir = function(p) {
 	var path = p.split('/');
 	if ((path[0] == '') && (path.length == 1))
 		path = [];
@@ -317,15 +318,37 @@ plugin.drawFiles = function(p) {
 		if (path[i] == '')
 			continue;
 
-		if ((dir.container[path[i]] != undefined) && (dir.container[path[i]].directory)) {
+		if (dir.container[path[i]] != undefined) {
 			dir = dir.container[path[i]];
 			realPath += '/' + path[i];
+			if (!dir.directory)
+				break;
 		} else {
 			break;
 		}
 	}
 
 	realPath = realPath.substr(1);
+	return [realPath, dir];
+}
+
+plugin.getFilesList = function(s) {
+	var ret = '';
+
+	for (var name in s) {
+		if (s[name].directory)
+			ret += this.getFilesList(s[name].container);
+		else
+			ret += '&v=' + s[name].id;
+	}
+
+	return ret;
+}
+
+plugin.drawFiles = function(p) {
+	var vars = this.getDir(p);
+	var realPath = vars[0];
+	var dir = vars[1];
 
 	var filesHtml = '';
 
@@ -338,10 +361,13 @@ plugin.drawFiles = function(p) {
 						'<i class="icon-folder-open"></i> ..</a><hr>';
 	}
 
-	for (name in dir.container) {
+	for (var name in dir.container) {
+		filesHtml += '<div>' +
+			'<div class="hiddenPath">' + realPath + '/' + name + '</div>' +
+			'<button onclick="mobile.toogleDisplay($(this).parent().find(\'.prioritySelect\'));" class="btn pull-right"><i class="icon-th-list"></i></button>'
 		if (dir.container[name].directory) {
 			filesHtml += '<a href="javascript://void();" onclick="mobile.drawFiles(\'' + realPath + '/' + name + '\');">' +
-				'<i class="icon-folder-open"></i>&nbsp;' + name + '</a><hr>';
+				'<i class="icon-folder-open"></i>&nbsp;' + name + '</a>';
 		} else {
 			var idName = 'file' + dir.container[name].id;
 			filesHtml += '<a href="javascript://void();" onclick="mobile.toogleDisplay($(\'#' + idName + '\'));">' +
@@ -349,11 +375,46 @@ plugin.drawFiles = function(p) {
 				'<table class="table table-striped"><tbody>' +
 					'<tr><td>' + theUILang.Done + '</td><td>' + theConverter.bytes(dir.container[name].done) + '</td></tr>' +
 					'<tr><td>' + theUILang.Size + '</td><td>' + theConverter.bytes(dir.container[name].size) + '</td></tr>' +
-				'</tbody></table></div><hr>';
+				'</tbody></table></div>';
 		}
+		filesHtml += '<br><select class="prioritySelect" style="display:none;">' +
+			'<option disabled ' + ((dir.container[name].priority == -1) ? 'selected' : '') + '></option>' +
+			'<option value="2" ' + ((dir.container[name].priority == 2) ? 'selected' : '') + '>' + theUILang.High_priority + '</option>' +
+			'<option value="1" ' + ((dir.container[name].priority == 1) ? 'selected' : '') + '>' + theUILang.Normal_priority + '</option>' +
+			'<option value="0" ' + ((dir.container[name].priority == 0) ? 'selected' : '') + '>' + theUILang.Dont_download + '</option>' +
+			'</select></div><hr/>';
+
 	}
 
 	$('#detailsFilesPage').html(filesHtml);
+	$('#detailsFilesPage select').change(function() {
+		var newValue = $(this).val();
+		if (newValue < 0)
+			return;
+
+		var vars = plugin.getDir($(this).parent().find('.hiddenPath').text());
+
+		var filesList = '';
+		if (!vars[1].directory)
+			filesList = vars[1].id;
+		else 
+			filesList = plugin.getFilesList(vars[1].container);
+
+		plugin.request('?action=setprio&hash=' + plugin.torrent.hash + filesList + '&s=' + newValue);
+	});
+}
+
+plugin.fillDirectoriesPriority = function(p) {
+	var priority = -2;
+	for (var name in p.container) {
+		if (p.container[name].directory)
+			this.fillDirectoriesPriority(p.container[name]);
+		if (priority == -2)
+			priority = p.container[name].priority;
+		else if (priority != p.container[name].priority)
+			priority = -1;
+	}
+	p.priority = priority;
 }
 
 plugin.loadFiles = function() {
@@ -362,7 +423,7 @@ plugin.loadFiles = function() {
 		$('#detailsFilesPage').html('');
 		this.request('?action=getfiles&hash=' + hash, function(data) {
 			var rawFiles = data[hash];
-			var files = {root: true, directory: true, container: {}};
+			var files = {root: true, directory: true, priority: -1, container: {}};
 
 			for (var i = 0; i < rawFiles.length; i++) {
 				var path = rawFiles[i].name.split('/');
@@ -370,17 +431,20 @@ plugin.loadFiles = function() {
 				var currDir = files;
 				for (var j = 0; j < path.length -1; j++) {
 					if (currDir.container[path[j]] == undefined)
-						currDir.container[path[j]] = {directory: true, root: false, container: {}};
+						currDir.container[path[j]] = {directory: true, root: false, container: {}, priority: -2};
 					currDir = currDir.container[path[j]];
 				}
 				currDir.container[path[path.length - 1]] = {root: false,
 					directory: false,
 					size: rawFiles[i].size,
 					done: rawFiles[i].done,
+					priority: rawFiles[i].priority,
 					id: i
 				};
 			}
 
+			debugger;
+			plugin.fillDirectoriesPriority(files);
 			mobile.files = files;
 			mobile.drawFiles('');
 		});
@@ -492,7 +556,6 @@ plugin.showGetDir = function() {
 };
 
 plugin.update = function() {
-	console.log('update');
 	theWebUI.requestWithTimeout("?list=1&getmsg=1",
 		function(data) {
 			plugin.torrents = data.torrents;
