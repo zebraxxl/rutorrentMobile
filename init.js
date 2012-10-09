@@ -655,8 +655,8 @@ plugin.init = function() {
 				$('body').html(data);
 
 				$('link[rel=stylesheet]').remove();
-				plugin.loadMainCSS();
 				plugin.loadCSS('css/bootstrap.min');
+				plugin.loadMainCSS();
 				if (plugin.bootstrapJS)
 					injectScript(plugin.path+'js/bootstrap.min.js');
 

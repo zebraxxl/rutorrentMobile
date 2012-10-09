@@ -1,7 +1,10 @@
 html, body {
 	overflow: visible;
 }
-
+.navbar .nav > li > a {
+	padding-left: 6px;
+	padding-right: 12px;
+}
 #mainContainer {
 	background-color: #fff;
 	padding: 3px 3px 3px 3px;
