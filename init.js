@@ -38,7 +38,8 @@ var detailsIdToLangId = {
 	'uploadSpeed' : "Ul_speed",
 	'seeds' : "Seeds",
 	'peers' : "Peers",
-	'label' : 'Label'
+	'label' : 'Label',
+	'priority' : 'Priority'
 };
 
 plugin.toogleDisplay = function(s) {
@@ -176,6 +177,8 @@ plugin.fillDetails = function(d) {
 	$('#torrentProgress .bar').text(percent + '%');
 
 	$('#torrentDetails #status td:last').text(theWebUI.getStatusIcon(d)[1]);
+	$('#torrentPriority option').attr('selected', false);
+	$('#torrentPriority option[value=' + d.priority + ']').attr('selected', true);
 	this.fillLabel(d.label);
 	$('#torrentDetails #done td:last').text(percent + '%');
 	$('#torrentDetails #downloaded td:last').text(theConverter.bytes(d.downloaded,2));
@@ -188,6 +191,10 @@ plugin.fillDetails = function(d) {
 	$('#torrentDetails #uploadSpeed td:last').text(theConverter.speed(d.ul));
 	$('#torrentDetails #seeds td:last').text(d.seeds_actual + " " + theUILang.of + " " + d.seeds_all + " " + theUILang.connected);
 	$('#torrentDetails #peers td:last').text(d.peers_actual + " " + theUILang.of + " " + d.peers_all + " " + theUILang.connected);
+};
+
+plugin.changePriority = function() {
+	this.request('?action=dsetprio&v=' + $('#torrentPriority').val() + '&hash=' + this.torrent.hash);
 };
 
 plugin.editLabel = function() {
@@ -628,6 +635,14 @@ plugin.init = function() {
 				$('#startStopped').append(' ' + theUILang.Dnt_start_down_auto);
 				$('#fastResume').append(' ' + theUILang.doFastResume);
 				$('#torrentFileSend').text(theUILang.add_button);
+
+				$('#torrentPriority').html(
+					'<option value="3">' + theUILang.High_priority + '</option>' +
+					'<option value="2">' + theUILang.Normal_priority + '</option>' +
+					'<option value="1">' + theUILang.Low_priority + '</option>' +
+					'<option value="0">' + theUILang.Dont_download + '</option>'
+				);
+				$('#torrentPriority').change(function(){mobile.changePriority()});
 
 				plugin.loadLang();
 
