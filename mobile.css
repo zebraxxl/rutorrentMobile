@@ -16,3 +16,28 @@ html, body {
 .hiddenPath {
 	display: none;
 }
+h5, #detailsTrackersPage a, #detailsFilesPage a {
+	word-break:break-all;
+	word-break:break-word;
+}
+#detailsFilesPage > div {
+	padding-right: 44px;
+	margin-right: 0 !important;
+}
+#detailsFilesPage div {
+	margin-right: -44px;
+}
+#detailsFilesPage button.btn {
+	margin-right: -44px;
+}
+#detailsFilesPage a {
+	display: inline-block;
+	margin-left: 14px;
+}
+#detailsFilesPage .icon-file {
+	position: absolute;
+	margin-left: -14px;
+}
+select {
+	width:auto;
+}
