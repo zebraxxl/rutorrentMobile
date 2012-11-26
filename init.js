@@ -657,6 +657,9 @@ plugin.init = function() {
 				$('link[rel=stylesheet]').remove();
 				plugin.loadCSS('css/bootstrap.min');
 				plugin.loadMainCSS();
+				$('head').append('<meta name="apple-mobile-web-app-capable" content="yes" />');
+				$('head').append('<link rel="apple-touch-icon" sizes="114x114" href="'+plugin.path+'img/rutorrent.png" />');
+				injectScript(plugin.path+'js/apple4inch.js');
 				if (plugin.bootstrapJS)
 					injectScript(plugin.path+'js/bootstrap.min.js');
 
