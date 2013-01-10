@@ -7,7 +7,7 @@ html, body {
 }
 #mainContainer {
 	background-color: #fff;
-	padding: 3px 3px 3px 3px;
+	padding: 60px 3px 41px 3px;
 	margin: 0;
 };
 #detailsFilesPage a {
@@ -15,4 +15,12 @@ html, body {
 }
 .hiddenPath {
 	display: none;
+}
+.nav-tabs {
+        background-color: #fff;
+        padding-top: 3px;
+        padding-left: 3px;
+}
+.table {
+        margin-bottom: 0;
 }
