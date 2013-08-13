@@ -679,10 +679,10 @@ plugin.init = function() {
 
 				if (mobile.navBarToBottom) {
 					$('#mainNavbar').addClass('navbar-fixed-bottom');
-					$('#mainContainer').css('padding-bottom', '46px');
+					$('.nav-tabs').addClass('navbar-fixed-top');
 				} else {
 					$('#mainNavbar').addClass('navbar-fixed-top');
-					$('#mainContainer').css('padding-top', '46px');
+					$('.nav-tabs').addClass('navbar-fixed-bottom');
 				}
 
 				$('.torrentControl').css('display', 'none');
