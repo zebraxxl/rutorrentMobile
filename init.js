@@ -30,6 +30,7 @@ var detailsIdToLangId = {
 	'status' : "Status",
 	'done' : "Done",
 	'downloaded' : 'Downloaded',
+	'size' : 'Size',
 	'timeElapsed' : "Time_el",
 	'remaining' : "Remaining",
 	'ratio' : "Ratio",
@@ -183,6 +184,7 @@ plugin.fillDetails = function(d) {
 	this.fillLabel(d.label);
 	$('#torrentDetails #done td:last').text(percent + '%');
 	$('#torrentDetails #downloaded td:last').text(theConverter.bytes(d.downloaded,2));
+	$('#torrentDetails #size td:last').text(theConverter.bytes(d.size,2));
 	$('#torrentDetails #timeElapsed td:last').text(theConverter.time(Math.floor((new Date().getTime()-theWebUI.deltaTime)/1000-iv(d.state_changed)),true));
 	$('#torrentDetails #remaining td:last').html((d.eta ==- 1) ? "&#8734;" : theConverter.time(d.eta));
 	$('#torrentDetails #ratio td:last').html((d.ratio ==- 1) ? "&#8734;" : theConverter.round(d.ratio/1000,3));
@@ -561,6 +563,8 @@ plugin.update = function() {
 			plugin.torrents = data.torrents;
 			plugin.labels = data.labels;
 
+			var tul = 0;
+			var tdl = 0;
 			var labelsHtml = '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.label, this, \'\');">' +
 				theUILang.No_label + '</a></li>';
 			var nextLabelId = 1;
@@ -584,12 +588,14 @@ plugin.update = function() {
 				var percent = v.done / 10;
 
 				v.hash = n;
+				tul += iv(v.ul);
+				tdl += iv(v.dl);
 
 				listHtml +=
 					'<tr id="' + n + '" class="torrentBlock status' + statusClass + ' label' + plugin.labelIds[v.label] + '" onclick="mobile.showDetails(this.id);"><td>' +
-						'<h5>' + v.name + '</h5>' + status[1] +
+						'<h5>' + v.name + '</h5>' + status[1] + ((v.ul) ? ' ↑' + theConverter.speed(v.ul) : '') + ((v.dl) ? ' ↓' + theConverter.speed(v.dl) : '') +
 						'<div class="progress progress-striped' + ((v.done == 1000) ? '' : ' active') + '">' +
-							'<div class="bar" style="width: ' + percent + '%;">' + percent + '%</div>' +
+							'<div class="bar" style="width: ' + percent + '%;">' + percent + '% of ' + theConverter.bytes(v.size,2) + '</div>' +
 						'</div>' +
 					'</td></tr>';
 			});
@@ -607,6 +613,9 @@ plugin.update = function() {
 					plugin.showList();
 				}
 			}
+
+			$('#upspeed').text(theConverter.speed(tul));
+			$('#downspeed').text(theConverter.speed(tdl));
 
 			setTimeout(function() {mobile.update();}, theWebUI.settings['webui.update_interval']);
 		},

@@ -5,11 +5,18 @@ html, body {
 	padding-left: 6px;
 	padding-right: 12px;
 }
+.navbar .nav > li > span {
+	font-size: 70%;
+	color: #fff;
+}
+.navbar .nav > li > i {
+	margin-top: 3px;
+}
 #mainContainer {
 	background-color: #fff;
-	padding: 60px 3px 41px 3px;
+	padding: 44px 3px 16px 3px;
 	margin: 0;
-};
+}
 #detailsFilesPage a {
 	padding: 3px;
 }
@@ -17,12 +24,12 @@ html, body {
 	display: none;
 }
 .nav-tabs {
-        background-color: #fff;
-        padding-top: 3px;
-        padding-left: 3px;
+	background-color: #fff;
+	padding-top: 3px;
+	padding-left: 3px;
 }
 .table {
-        margin-bottom: 0;
+	margin-bottom: 0;
 }
 h5, #detailsTrackersPage a, #detailsFilesPage a {
 	word-break:break-all;
