@@ -12,6 +12,20 @@ html, body {
 .navbar .nav > li > i {
 	margin-top: 3px;
 }
+#torrentsList .nav {
+	white-space: nowrap;
+	font-size: 0;
+	margin-bottom: 0;
+}
+#torrentsList .nav > li {
+	display: inline-block;
+	float: none;
+}
+#torrentsList .nav > li > a {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
 #mainContainer {
 	background-color: #fff;
 	padding: 44px 3px 16px 3px;

@@ -91,6 +91,7 @@ plugin.showList = function() {
 };
 
 plugin.filter = function(f, self, l) {
+	$('#torrentsLabels').css('width', '');
 	if (f == this.statusFilter.label) {
 		$('.torrentBlock').css('display', 'none');
 		$('.label' + this.labelIds[l]).css('display', '');
@@ -100,6 +101,13 @@ plugin.filter = function(f, self, l) {
 		$('#torrentsLabels > a').html(l + ' <b class="caret"></b>');
 		$('#torrentsList ul li').removeClass('active');
 		$('#torrentsLabels').addClass('active');
+		var totalWidth = $('#torrentsLabels').parent().outerWidth();
+		var combinedWidth = $('#torrentsAll').outerWidth() + $('#torrentsDownloading').outerWidth() + $('#torrentsCompleted').outerWidth();
+		var labelsWidth = $('#torrentsLabels').outerWidth();
+		var diffWidth = totalWidth - combinedWidth;
+		if (diffWidth < labelsWidth) {
+			$('#torrentsLabels').width(diffWidth - 4);
+		}
 	} else {
 		var downloadingDisplay = (f & this.statusFilter.downloading) != 0 ? '' : 'none';
 		var completedDisplay = (f & this.statusFilter.completed) != 0 ? '' : 'none';
