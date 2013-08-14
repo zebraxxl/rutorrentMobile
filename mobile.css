@@ -13,10 +13,12 @@ html, body {
 	margin-top: 3px;
 }
 #torrentsList .nav {
+	white-space: nowrap;
 	font-size: 0;
 }
 #torrentsList .nav > li {
 	display: inline-block;
+	float: none;
 }
 #torrentsList .nav > li > a {
 	overflow: hidden;
