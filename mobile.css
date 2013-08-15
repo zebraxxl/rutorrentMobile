@@ -41,6 +41,9 @@ html, body {
 	padding-top: 3px;
 	padding-left: 3px;
 }
+.progress .bar {
+	white-space: nowrap;
+}
 .table {
 	margin-bottom: 0;
 }
