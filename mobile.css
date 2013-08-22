@@ -27,7 +27,7 @@ html, body {
 }
 #mainContainer {
 	background-color: #fff;
-	padding: 44px 3px 16px 3px;
+	padding: 44px 3px 41px 3px;
 	margin: 0;
 }
 #detailsFilesPage a {
@@ -71,4 +71,29 @@ h5, #detailsTrackersPage a, #detailsFilesPage a {
 }
 select {
 	width:auto;
+}
+a:focus {
+	outline: none;
+}
+.nav-tabs .open .dropdown-toggle {
+	color: #fff !important;
+	background-color: #999 !important;
+	border-color: #999 !important;
+}
+.nav li.dropdown.open .caret {
+	border-top-color: #fff !important;
+	border-bottom-color: #fff !important;
+}
+.nav-tabs .active .dropdown-toggle .caret {
+	border-top-color: #555 !important;
+	border-bottom-color: #555 !important;
+}
+.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+	color: #08c;
+	background-color: transparent;
+	border-color: transparent;
+}
+.nav .dropdown-toggle:hover .caret, .nav .dropdown-toggle:focus .caret {
+	border-top-color: #08c;
+	border-bottom-color: #08c;
 }

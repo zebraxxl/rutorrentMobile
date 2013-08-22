@@ -30,16 +30,34 @@
 	</div></div></div>
 	<div class="mainContainer" id="torrentsList">
 		<ul class="nav nav-tabs">
-			<li class="active" id="torrentsAll">
-				<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.all, this);"></a>
-			</li>
-			<li id="torrentsDownloading">
-				<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.downloading, this);"></a>
-			</li>
-			<li id="torrentsCompleted">
-				<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.completed, this);"></a>
+			<li id="torrentsStatus" class="dropdown">
+				<a href="javascript://void();" class="dropdown-toggle" data-toggle="dropdown"></a>
+				<ul class="dropdown-menu pull-left" style="margin-top:0px;">
+					<li id="torrentsAll">
+						<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.all, this);"></a>
+					</li>
+					<li id="torrentsDownloading">
+						<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.downloading, this);"></a>
+					</li>
+					<li id="torrentsCompleted">
+						<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.completed, this);"></a>
+					</li>
+					<li id="torrentsActive">
+						<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.active, this);"></a>
+					</li>
+					<li id="torrentsInactive">
+						<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.inactive, this);"></a>
+					</li>
+					<li id="torrentsError">
+						<a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.error, this);"></a>
+					</li>
+				</ul>
 			</li>
 			<li id="torrentsLabels" class="dropdown">
+				<a href="javascript://void();" class="dropdown-toggle" data-toggle="dropdown"></a>
+				<ul class="dropdown-menu pull-left" style="margin-top:0px;"></ul>
+			</li>
+			<li id="torrentsTrackers" class="dropdown">
 				<a href="javascript://void();" class="dropdown-toggle" data-toggle="dropdown"></a>
 				<ul class="dropdown-menu pull-right" style="margin-top:0px;"></ul>
 			</li>
