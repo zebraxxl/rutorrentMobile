@@ -693,18 +693,24 @@ plugin.update = function() {
 
 				mobile.request('?action=gettrackers&hash=' + n, function(data) {
 					var trackers = data[n];
+					var uniqueTrackers = [];
 					for (var i = 0; i < trackers.length; i++) {
-						var trackerName = theWebUI.getTrackerName(trackers[i].name)
+						var trackerName = theWebUI.getTrackerName(trackers[i].name);
 						if (trackerName in trackersCount) {
-							trackersCount[trackerName]++;
+							if ($.inArray(trackerName, uniqueTrackers) == -1) {
+								trackersCount[trackerName]++;
+							}
 						} else {
 							trackersCount[trackerName] = 1;
 						}
 						if (plugin.trackerIds[trackerName] == undefined) {
 							plugin.trackerIds[trackerName] = nextTrackerId++;
 						}
-						trackersMap[n] = trackerName;
+						if ($.inArray(trackerName, uniqueTrackers) == -1) {
+							uniqueTrackers.push(trackerName);
+						}
 					}
+					trackersMap[n] = uniqueTrackers;
 					count--;
 					if(count == 0) {
 						Object.keys(trackersCount).sort().forEach(function(t) {
@@ -716,8 +722,10 @@ plugin.update = function() {
 						$('#torrentsTrackers ul').html(trackersHtml);
 
 						$('#torrentsList #list').html(listHtml);
-						$.each(trackersMap, function(i, n) {
-							$('#'+i).addClass("tracker"+plugin.trackerIds[n]);
+						$.each(trackersMap, function(id, ns) {
+							$.each(ns, function(i, n) {
+								$('#'+id).addClass("tracker"+plugin.trackerIds[n]);
+							});
 						});
 						$('#torrentsAll > a').text(theUILang.All + ' (' + $('.torrentBlock').length + ')');
 						$('#torrentsDownloading > a').text(theUILang.Downloading + ' (' + $('.statusDownloading').length + ')');
