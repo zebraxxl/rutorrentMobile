@@ -645,9 +645,7 @@ plugin.update = function() {
 			plugin.labelIds = {};
 			plugin.trackerIds = {};
 			plugin.labelIds[''] = 0;
-			var labelsSorted = {};
 			var trackersCount = {};
-			var trackersCountSorted = {};
 			var trackersMap = {};
 			var count = Object.keys(plugin.torrents).length;
 			var tul = 0;
@@ -659,15 +657,12 @@ plugin.update = function() {
 			var trackersHtml = '';
 
 			Object.keys(plugin.labels).sort().forEach(function(l) {
-				labelsSorted[l] = plugin.labels[l];
-			});
-			for(var l in labelsSorted) {
 				if (plugin.labelIds[l] == undefined)
 					plugin.labelIds[l] = nextLabelId++;
 
 				labelsHtml += '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.label, this, \'' + l + '\');">' +
 					l + ' (' + plugin.labels[l] + ')</a></li>';
-			}
+			});
 			$('#torrentsLabels ul').html(labelsHtml);
 
 			var listHtml = '<table class="table table table-striped"><tbody>';
@@ -714,10 +709,7 @@ plugin.update = function() {
 					count--;
 					if(count == 0) {
 						Object.keys(trackersCount).sort().forEach(function(t) {
-							trackersCountSorted[t] = trackersCount[t];
-						});
-						$.each(trackersCountSorted, function(t, c) {
-							trackersHtml += '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.tracker, this, \'' + t + '\');">' + t + ' (' + c + ')</a></li>';
+							trackersHtml += '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.tracker, this, \'' + t + '\');">' + t + ' (' + trackersCount[t] + ')</a></li>';
 						});
 						$('#torrentsTrackers ul').html(trackersHtml);
 
