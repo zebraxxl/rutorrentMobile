@@ -570,11 +570,11 @@ plugin.delete = function() {
 		this.showList();
 	else {
 
+		if ((this.eraseWithDataLoaded) && (this.eraseWithDataDefault != undefined)) {
+				$('#deleteWithData input').attr('checked', this.eraseWithDataDefault);
+		}
 		if (theWebUI.settings["webui.confirm_when_deleting"]) {
 			$('#confimTorrentDelete h5').text(theUILang.areYouShure + ' ' + this.torrent.name);
-			if ((this.eraseWithDataLoaded) && (this.eraseWithDataDefault != undefined)) {
-					$('#deleteWithData input').attr('checked', this.eraseWithDataDefault);
-			}
 			this.showPage('confimTorrentDelete');
 		} else {
 			this.deleteConfimed();
