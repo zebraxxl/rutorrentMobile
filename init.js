@@ -121,7 +121,7 @@ plugin.showAlert = function(message,alerttype) {
     $('#alertdiv').removeClass('in');
     setTimeout(function() {
       $("#alertdiv").remove();
-    }, 500);
+    }, 1500);
   }, 5000);
 };
 
