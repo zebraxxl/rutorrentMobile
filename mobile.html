@@ -124,17 +124,22 @@
   			<div class="input-append" id="dirEditBlock">
   				<input type="text" id="dir_edit" name="dir_edit" class="form-control pull-left" placeholder="Directory">
   			</div>
-  			<label class="checkbox" id='notAddPath'>
-  				<input type="checkbox" name="not_add_path" id="not_add_path">
-  			</label>
-  			<label class="checkbox" id='startStopped'>
-  				<input type="checkbox" name="torrents_start_stopped" id="torrents_start_stopped">
-  			</label>
-  			<label class="checkbox" id='fastResume'>
-  				<input type="checkbox" name="fast_resume" id="fast_resume">
-  			</label>
+        <div class="checkbox">
+    			<label id='notAddPath'>
+    				<input type="checkbox" name="not_add_path" id="not_add_path">
+    			</label>
+        </div>
+        <div class="checkbox">
+    			<label id='startStopped'>
+    				<input type="checkbox" name="torrents_start_stopped" id="torrents_start_stopped">
+    			</label>
+        </div>
+        <div class="checkbox">
+    			<label id='fastResume'>
+    				<input type="checkbox" name="fast_resume" id="fast_resume">
+    			</label>
+        </div>
     		<input class="form-control" type="text" id="tadd_label" name="tadd_label" placeholder="Label">
-        <div class="clearfix"></div>
         <hr>
         <div class="form-group">
           <label class="control-label" for="torrent_file" id="torrentFile"></label>
