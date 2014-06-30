@@ -64,7 +64,7 @@
 		</ul>
 		<div id="list"></div>
 	</div>
-	<div class="mainContainer" id="torrentDetails" style="display:none;">
+	<div class="mainContainer container" id="torrentDetails" style="display:none;">
 		<h5 id="torrentName"></h5>
 		<div class="progress progress-striped" id="torrentProgress">
 			<div class="progress-bar"></div>
@@ -104,7 +104,7 @@
 		<div class="detailsPage" id="detailsFilesPage">
 		</div>
 	</div>
-	<div class="mainContainer" id="globalSettings" style="display:none;">
+	<div class="mainContainer container" id="globalSettings" style="display:none;">
     <div class="form-group">
   		<label class="select">
   			<h5></h5>
@@ -118,8 +118,7 @@
   		</label>
     </div>
 	</div>
-	<div class="mainContainer" id="addTorrent" style="display:none;">
-    <div class="container">
+	<div class="mainContainer container" id="addTorrent" style="display:none;">
   		<form action="php/addtorrent.php?" id="addTorrentFile" method="post" enctype="multipart/form-data" target="uploadFrame">
   			<div class="input-append" id="dirEditBlock">
   				<input type="text" id="dir_edit" name="dir_edit" class="form-control pull-left" placeholder="Directory">
@@ -154,17 +153,14 @@
         </div>
     		<button type="submit" id="addUrl" class="btn btn-primary"></button>
   		</form>
-    </div>
 	</div>
-	<div class="mainContainer" id="getDirList" style="display:none;">
+	<div class="mainContainer container" id="getDirList" style="display:none;">
 
 	</div>
-	<div class="mainContainer" id="confimTorrentDelete" style="display:none;">
-		<div class="container text-center">
+	<div class="mainContainer container text-center" id="confimTorrentDelete" style="display:none;">
 			<h5 style="margin-top:40px;"></h5>
 			<button id="deleteOk" onclick="mobile.deleteConfimed();" class="btn btn-primary"></button>
 			<button id="deleteCancel" onclick="history.go(-1);" class="btn btn-default"></button>
-		</div>
 	</div>
   <div id="alert_placeholder"></div>
 </div>
