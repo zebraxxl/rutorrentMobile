@@ -22,7 +22,6 @@ var pageToHash = {
 	'globalSettings': 'settings',
 	'addTorrent': 'add',
 	'confimTorrentDelete': 'delete',
-	'torrentUploadstatus': 'status',
 	'getDirList': 'filesystem'
 };
 
@@ -944,8 +943,6 @@ plugin.init = function() {
           plugin.createiFrame();
           return(makeAddRequest(this));
         });
-
-
 
 				if (rTorrentStub.prototype.removewithdata != undefined) {
 					$('#confimTorrentDelete h5').after(
