@@ -64,7 +64,7 @@
 		</ul>
 		<div id="list"></div>
 	</div>
-	<div class="mainContainer container" id="torrentDetails" style="display:none;">
+	<div class="mainContainer" id="torrentDetails" style="display:none;">
 		<h5 id="torrentName"></h5>
 		<div class="progress progress-striped" id="torrentProgress">
 			<div class="progress-bar"></div>
@@ -154,11 +154,9 @@
     		<button type="submit" id="addUrl" class="btn btn-primary"></button>
   		</form>
 	</div>
-	<div class="mainContainer container" id="getDirList" style="display:none;">
-
-	</div>
+	<div class="mainContainer" id="getDirList" style="display:none;"></div>
 	<div class="mainContainer container text-center" id="confimTorrentDelete" style="display:none;">
-			<h5 style="margin-top:40px;"></h5>
+			<h5 style="margin-top: 40px;"></h5>
 			<button id="deleteOk" onclick="mobile.deleteConfimed();" class="btn btn-primary"></button>
 			<button id="deleteCancel" onclick="history.go(-1);" class="btn btn-default"></button>
 	</div>

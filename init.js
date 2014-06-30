@@ -658,7 +658,7 @@ plugin.drawGetDir = function(path, first) {
 			while ((match = re.exec(data)) != null) {
 				if (match[2] == '.') {
 					html = '<h5 style="padding:8px;">' + decodeURIComponent(match[1]) + '</h5>' +
-            '<button class="btn btn-default" style="margin-bottom: 15px;" onclick="mobile.chooseGetDir(\'' + decodeURIComponent(match[1]) + '\');">' + theUILang.Choose + '</button>' +
+            '<button class="btn btn-default" style="margin-bottom: 15px; margin-left: 10px;" onclick="mobile.chooseGetDir(\'' + decodeURIComponent(match[1]) + '\');">' + theUILang.Choose + '</button>' +
 						 html;
 				} else {
 					html += '<tr onclick="mobile.drawGetDir(\'' + decodeURIComponent(match[1]) + '\');">' +
