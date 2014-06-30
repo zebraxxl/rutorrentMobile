@@ -1,16 +1,49 @@
 html, body {
 	overflow: visible;
 }
-.navbar .nav > li > a {
-	padding-left: 6px;
-	padding-right: 12px;
+a, button, tr, select, input, label {
+  -webkit-tap-highlight-color: transparent;
 }
-.navbar .nav > li > span {
+div input {
+  margin: 0px;
+}
+.navbar .nav > li {
+  float: left;
+  margin-right: 15px;
+}
+.navbar .nav > li:last-child {
+  margin-right: 0px;
+}
+.navbar .nav > li > a, .navbar .nav > li > a:hover, .navbar .nav > li > a:focus {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0;
+  font-size: 14px;
+  background-color: transparent;
+  height: 50px;
+}
+.navbar .nav > li > div > span {
+  position: relative;
+  top: -2px;
 	font-size: 70%;
 	color: #fff;
+  line-height: 0;
 }
-.navbar .nav > li > i {
-	margin-top: 3px;
+.navbar .nav > li > div > i {
+	margin-top: 7px;
+  margin-right: 2px;
+}
+.navbar .divider-vertical {
+height: 50px;
+margin: 0 15px 0 0;
+border-right: 1px solid #323232;
+border-left: 1px solid #111111;
+}
+
+#mainContainer {
+	background-color: #fff;
+	padding: 39px 3px 51px 3px;
+	margin: 0;
 }
 #torrentsList .nav {
 	white-space: nowrap;
@@ -18,20 +51,24 @@ html, body {
 }
 #torrentsList .nav > li {
 	display: inline-block;
-	float: none;
 }
 #torrentsList .nav > li > a {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
-#mainContainer {
-	background-color: #fff;
-	padding: 44px 3px 41px 3px;
-	margin: 0;
-}
+#torrentDetails #detailsDetailsPage #label input {
+  display: inline;
+  height: 24px;
+  width: 140px;
+  padding-top: 5px;
+  vertical-align: middle;
+} 
 #detailsFilesPage a {
 	padding: 3px;
+}
+#globalSettings {
+  padding-left: 15px;
 }
 .hiddenPath {
 	display: none;
@@ -41,15 +78,16 @@ html, body {
 	padding-top: 3px;
 	padding-left: 3px;
 }
-.progress .bar {
+.progress .progress-bar {
 	white-space: nowrap;
+  text-shadow:1px 1px 3px #000
 }
 .table {
 	margin-bottom: 0;
 }
-h5, #detailsTrackersPage a, #detailsFilesPage a {
+h5, #detailsTrackersPage a, #detailsFilesPage a, #getDirList tr {
 	word-break:break-all;
-	word-break:break-word;
+/*  word-break:break-word;*/
 }
 #detailsFilesPage > div {
 	padding-right: 44px;
@@ -65,8 +103,7 @@ h5, #detailsTrackersPage a, #detailsFilesPage a {
 	display: inline-block;
 	margin-left: 14px;
 }
-#detailsFilesPage .icon-file {
-	position: absolute;
+#detailsFilesPage .glyphicon-file {
 	margin-left: -14px;
 }
 select {
@@ -96,4 +133,16 @@ a:focus {
 .nav .dropdown-toggle:hover .caret, .nav .dropdown-toggle:focus .caret {
 	border-top-color: #08c;
 	border-bottom-color: #08c;
+}
+#addTorrent {
+  margin-top: -20px;
+}
+#addTorrent #showGetDir {
+  height: 34px;
+}
+.icon-white {
+  color: white;
+}
+.icon-black {
+  color: black;
 }

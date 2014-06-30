@@ -74,6 +74,12 @@ if(!$type(theWebUI.getTrackerName))
         }
 }
 
+$(document).on('blur', 'input, textarea', function() {
+  setTimeout(function() {
+    $(window).scrollTop($(window).scrollTop()+1);
+  }, 0);
+});
+
 plugin.toogleDisplay = function(s) {
 	if (s.css('display') == 'none')
 		s.css('display', '')
@@ -107,7 +113,40 @@ plugin.setHash = function(page) {
 	window.location.hash = pageToHash[page];
 	this.lastHref = window.location.href;
 	window.scrollTo(0,0);
-}
+};
+
+plugin.showAlert = function(message,alerttype) {
+  $('#alert_placeholder').append('<div id="alertdiv" class="alert alert-dismissible fade in navbar-fixed-top '+ alerttype +'" role="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>'+ message +'</div>');
+  setTimeout(function() {
+    $('#alertdiv').removeClass('in');
+    setTimeout(function() {
+      $("#alertdiv").remove();
+    }, 500);
+  }, 5000);
+};
+
+plugin.createiFrame = function() {
+  $('#addTorrent').prepend('<iframe id="uploadFrame" name="uploadFrame" style="visibility: hidden; width: 0; height: 0; line-height: 0; font-size: 0; border: 0;"></iframe>')
+  $('#uploadFrame').load(function() {
+  	var d = (this.contentDocument || this.contentWindow.document);
+
+  	if(d && (d.location.href != "about:blank")) {
+  		var matchedRegex = d.body.innerHTML.match(/noty\(".*"\+(.*),"(.*)"/);
+  		if (matchedRegex != null) {
+        var message = '';
+        try {message = eval(matchedRegex[1]);} catch(e) { }
+        if (message != '') {
+          if(matchedRegex[2] == "success") {
+            plugin.showAlert(message,"alert-success");
+          } else if (matchedRegex[2] == "error") {
+              plugin.showAlert(message,"alert-danger");
+          }
+        }
+      }
+  	}
+    $('#uploadFrame').remove();
+  });
+};
 
 plugin.showPage = function(page) {
 	$('.mainContainer').css('display', 'none');
@@ -238,6 +277,8 @@ plugin.setULLimit = function() {
 
 plugin.addTorrent = function() {
 	this.showPage('addTorrent');
+  var used = ($('#dir_edit').outerWidth(true) - $('#dir_edit').width()) + $('#showGetDir').outerWidth(true) + 1;
+  $('#dir_edit').width($('#addTorrentFile').outerWidth(true) - used);
 };
 
 plugin.fillLabel = function(label) {
@@ -245,7 +286,7 @@ plugin.fillLabel = function(label) {
 		return;
 
 	$('#torrentDetails #label td:last').text(label + ' ')
-		.append('<button class="btn btn-small" type="button" onclick="mobile.editLabel();"><i class="icon-edit"></i></button>');
+		.append('<button class="btn btn-default btn-sm" type="button" onclick="mobile.editLabel();"><i class="glyphicon glyphicon-edit .icon-black"></i></button>');
 };
 
 plugin.fillDetails = function(d) {
@@ -256,8 +297,8 @@ plugin.fillDetails = function(d) {
 	if (d.done != 1000) {
 		$('#torrentProgress').addClass('active');
 	}
-	$('#torrentProgress .bar').css('width', percent + '%');
-	$('#torrentProgress .bar').text(percent + '%');
+	$('#torrentProgress .progress-bar').css('width', percent + '%');
+	$('#torrentProgress .progress-bar').text(percent + '% of ' + theConverter.bytes(d.size,2));
 
 	$('#torrentDetails #status td:last').text(theWebUI.getStatusIcon(d)[1]);
 	$('#torrentPriority option').attr('selected', false);
@@ -285,21 +326,21 @@ plugin.editLabel = function() {
 	plugin.labelInEdit = true;
 	$('#torrentDetails #label td:last')
 		.html('<div class="input-append">' +
-			'<input class="span2" id="labelEdit" size="16" type="text" value="' + plugin.torrent.label +'" style="margin-right:0;height:15px;"/>' +
-			'<button class="btn"><i class="icon-ok"></i></button></div>');
+			'<input class="form-control" id="labelEdit" type="text" value="' + plugin.torrent.label +'"/>' +
+			'<button class="btn btn-default btn-sm"><i class="glyphicon glyphicon-ok icon-black"></i></button></div>');
 	$('#labelEdit').focus();
-	$('#labelEdit').blur(function() {
-		var newLabel = $('#labelEdit').val();
-		plugin.labelInEdit = false;
-		plugin.fillLabel(newLabel);
+  $('#labelEdit').blur(function() {
+    var newLabel = $('#labelEdit').val();
+    plugin.labelInEdit = false;
+    plugin.fillLabel(newLabel);
 
-		if (plugin.torrent.label != newLabel) {
-			plugin.torrent.label = newLabel;
-			plugin.torrents[plugin.torrent.hash].label = newLabel;
+    if (plugin.torrent.label != newLabel) {
+      plugin.torrent.label = newLabel;
+      plugin.torrents[plugin.torrent.hash].label = newLabel;
 
-			plugin.request('?action=setlabel&hash=' + plugin.torrent.hash + '&s=label&v=' + encodeURIComponent(newLabel));
-		};
-	});
+      plugin.request('?action=setlabel&hash=' + plugin.torrent.hash + '&s=label&v=' + encodeURIComponent(newLabel));
+    };
+  });
 };
 
 plugin.showDetails = function(e) {
@@ -350,14 +391,14 @@ plugin.loadTrackers = function() {
 		this.request('?action=gettrackers&hash=' + hash, function(data) {
 			var trackers = data[hash];
 			if (hash == mobile.torrent.hash) {
-				var trackersHtml = '<div class="accordion" id="trackersAccordion">';
+				var trackersHtml = '<div class="panel-group" id="trackersAccordion">';
 
 				for (var i = 0; i < trackers.length; i++) {
 					trackersHtml +=
-						'<div class="accordion-group"><div class="accordion-heading">' +
+						'<div class="panel panel-default"><div class="panel-heading">' +
 								'<a class="accordion-toggle" data-toggle="collapse" data-parent="#trackersAccordion" href="#tracker' + i + '">' +
 									trackers[i].name + '</a></div>' +
-							'<div id="tracker' + i + '" class="accordion-body collapse"><div class="accordion-inner">' +
+							'<div id="tracker' + i + '" class="panel-collapse collapse"><div class="panel-body">' +
 								'<table class=" table table-striped"><tbody>' +
 									'<tr><td>' + theUILang.Type + '</td><td>' + theFormatter.trackerType(trackers[i].type) + '</td></tr>' +
 									'<tr><td>' + theUILang.Enabled + '</td><td>' + theFormatter.yesNo(trackers[i].enabled) + '</td></tr>' +
@@ -379,7 +420,7 @@ plugin.loadTrackers = function() {
 				if (!plugin.bootstrapJS) {
 					$('#trackersAccordion a').click(function() {
 						$('#trackersAccordion .in').removeClass('in');
-						$(this).parent().parent().find('.accordion-body').addClass('in');
+						$(this).parent().parent().find('.panel-body').addClass('in');
 						return false;
 					});
 				}
@@ -441,20 +482,20 @@ plugin.drawFiles = function(p) {
 			i = 0;
 		var upperDir = realPath.substr(0, i);
 		filesHtml += '<a href="javascript://void();" onclick="mobile.drawFiles(\'' + upperDir + '\');">' +
-						'<i class="icon-folder-open"></i> ..</a><hr>';
+						'<i class="glyphicon glyphicon-folder-open icon-black"></i> ..</a><hr>';
 	}
 
 	for (var name in dir.container) {
 		filesHtml += '<div>' +
 			'<div class="hiddenPath">' + realPath + '/' + name + '</div>' +
-			'<button onclick="mobile.toogleDisplay($(this).parent().find(\'.prioritySelect\'));" class="btn pull-right"><i class="icon-th-list"></i></button>'
+			'<button onclick="mobile.toogleDisplay($(this).parent().find(\'.prioritySelect\'));" class="btn btn-default btn-sm pull-right"><i class="glyphicon glyphicon-th-list icon-black"></i></button>'
 		if (dir.container[name].directory) {
 			filesHtml += '<a href="javascript://void();" onclick="mobile.drawFiles(\'' + realPath + '/' + name + '\');">' +
-				'<i class="icon-folder-open"></i>&nbsp;' + name + '</a>';
+				'<i class="glyphicon glyphicon-folder-open icon-black"></i>&nbsp;' + name + '</a>';
 		} else {
 			var idName = 'file' + dir.container[name].id;
 			filesHtml += '<a href="javascript://void();" onclick="mobile.toogleDisplay($(\'#' + idName + '\'));">' +
-				'<i class="icon-file"></i>&nbsp;' + name + '</a><div style="display:none;" id="' + idName + '">' +
+				'<i class="glyphicon glyphicon-file icon-black"></i>&nbsp;' + name + '</a><div style="display:none;" id="' + idName + '">' +
 				'<table class="table table-striped"><tbody>' +
 					'<tr><td>' + theUILang.Done + '</td><td>' + theConverter.bytes(dir.container[name].done) + '</td></tr>' +
 					'<tr><td>' + theUILang.Size + '</td><td>' + theConverter.bytes(dir.container[name].size) + '</td></tr>' +
@@ -483,7 +524,7 @@ plugin.drawFiles = function(p) {
 		else 
 			filesList = plugin.getFilesList(vars[1].container);
 
-		plugin.request('?action=setprio&hash=' + plugin.torrent.hash + filesList + '&s=' + newValue);
+		plugin.request('?action=setprio&hash=' + plugin.torrent.hash  + '&v=' +filesList + '&s=' + newValue);
 	});
 }
 
@@ -616,11 +657,12 @@ plugin.drawGetDir = function(path, first) {
 
 			while ((match = re.exec(data)) != null) {
 				if (match[2] == '.') {
-					html = '<button class="btn pull-right" onclick="mobile.chooseGetDir(\'' + decodeURIComponent(match[1]) + '\');">' + theUILang.Choose + '</button>' +
-						'<h5 style="padding:8px;">' + decodeURIComponent(match[1]) + '</h5>' + html;
+					html = '<h5 style="padding:8px;">' + decodeURIComponent(match[1]) + '</h5>' +
+            '<button class="btn btn-default" style="margin-bottom: 15px;" onclick="mobile.chooseGetDir(\'' + decodeURIComponent(match[1]) + '\');">' + theUILang.Choose + '</button>' +
+						 html;
 				} else {
 					html += '<tr onclick="mobile.drawGetDir(\'' + decodeURIComponent(match[1]) + '\');">' +
-						'<td style="padding:14px;"><i class="icon-folder-open"></i> ' + match[2] + '</td></tr>';
+						'<td style="padding:14px;"><i class="glyphicon glyphicon-folder-open icon-black"></i> ' + match[2] + '</td></tr>';
 				}
 			}
 
@@ -682,7 +724,7 @@ plugin.update = function() {
 					'<tr id="' + n + '" class="torrentBlock status' + statusClass + ' state' + stateClass + ' error' + errorClass + ' label' + plugin.labelIds[v.label] + '" onclick="mobile.showDetails(this.id);"><td>' +
 						'<h5>' + v.name + '</h5>' + status[1] + ((v.ul) ? ' ↑' + theConverter.speed(v.ul) : '') + ((v.dl) ? ' ↓' + theConverter.speed(v.dl) : '') +
 						'<div class="progress progress-striped' + ((v.done == 1000) ? '' : ' active') + '">' +
-							'<div class="bar" style="width: ' + percent + '%;">' + percent + '% of ' + theConverter.bytes(v.size,2) + '</div>' +
+							'<div class="progress-bar" style="width: ' + percent + '%;">' + percent + '% of ' + theConverter.bytes(v.size,2) + '</div>' +
 						'</div>' +
 					'</td></tr>';
 
@@ -793,9 +835,9 @@ plugin.init = function() {
 				$('link[rel=stylesheet]').remove();
 				plugin.loadCSS('css/bootstrap.min');
 				plugin.loadMainCSS();
+        $('head').append('<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>');
 				$('head').append('<meta name="apple-mobile-web-app-capable" content="yes" />');
 				$('head').append('<link rel="apple-touch-icon" sizes="114x114" href="'+plugin.path+'img/rutorrent.png" />');
-				injectScript(plugin.path+'js/apple4inch.js');
 				if (plugin.bootstrapJS)
 					injectScript(plugin.path+'js/bootstrap.min.js');
 
@@ -854,8 +896,6 @@ plugin.init = function() {
 				   $('#torrentFileName').val($(this).val());
 				});
 
-				$('#dirLabel').text(theUILang.Base_directory);
-				$('#addLabelLabel').text(theUILang.Label);
 				$('#notAddPath').append(' ' + theUILang.Dont_add_tname);
 				$('#startStopped').append(' ' + theUILang.Dnt_start_down_auto);
 				$('#fastResume').append(' ' + theUILang.doFastResume);
@@ -871,26 +911,46 @@ plugin.init = function() {
 
 				plugin.loadLang();
 
-				$('#uploadFrame').load(function() {
-					var d = (this.contentDocument || this.contentWindow.document);
+        var makeAddRequest = function(frm)
+        {
+        	var s = theURLs.AddTorrentURL+"?";
+        	if($("#torrents_start_stopped").attr("checked"))
+        		s += 'torrents_start_stopped=1&';
+        	if($("#fast_resume").attr("checked"))
+        		s += 'fast_resume=1&';
+        	if($("#not_add_path").attr("checked"))
+        		s += 'not_add_path=1&';
+        	var dir = $.trim($("#dir_edit").val());
+        	if(dir.length)
+        		s += ('dir_edit='+encodeURIComponent(dir)+'&');
+        	var lbl = $.trim($("#tadd_label").val());
+        	if(lbl.length)
+        		s += ('label='+encodeURIComponent(lbl));
+        	frm.action = s;
+        	return(true);
+        }
+        $("#addTorrentFile").submit(function()
+        {
+        	if(!$("#torrent_file").val().match(".torrent")) 
+        	{
+        		alert(theUILang.Not_torrent_file);
+         		return(false);
+       		}
+          plugin.createiFrame();
+        	return(makeAddRequest(this));
+        });
+        $("#addTorrentUrl").submit(function()
+        {
+          plugin.createiFrame();
+          return(makeAddRequest(this));
+        });
 
-					if(d && (d.location.href != "about:blank")) {
-						var matchedRegex = d.body.innerHTML.match(/log\(([\S]+)\)/);
-						if (matchedRegex != null) {
-							var message = '';
-							try {message = eval(matchedRegex[1]);} catch(e) { }
-							if (message != '') {
-								$('#uploadStatusText').text(message);
-								plugin.showPage('torrentUploadstatus');
-							}
-						}
-					}
-				});
+
 
 				if (rTorrentStub.prototype.removewithdata != undefined) {
 					$('#confimTorrentDelete h5').after(
-						'<label class="checkbox inline" id="deleteWithData" style="margin-bottom:5px;">' +
-						'<input type="checkbox" style="margin-bottom:5px;"> ' + theUILang.Delete_data + '</label><br/>');
+						'<div class="checkbox"><label" id="deleteWithData">' +
+						'<input type="checkbox" style="float: none;"> ' + theUILang.Delete_data + '</label></div>');
 
 					plugin.eraseWithDataLoaded = true;
 				}
@@ -898,7 +958,7 @@ plugin.init = function() {
 				if ((plugin.getDirEnabled) &&(theWebUI.rDirBrowser != undefined)) {
 					plugin.getDirLoaded = true;
 
-					$('#dirEditBlock').append('<input type="button" class="btn" id="showGetDir" type="button" onclick="mobile.showGetDir();" value="..."></input>');
+					$('#dirEditBlock').append('<input type="button" class="btn btn-default btn-sm" id="showGetDir" type="button" onclick="mobile.showGetDir();" value="..."></input>');
 				}
 
 				plugin.update();
@@ -922,12 +982,12 @@ plugin.onLangLoaded = function() {
 		$(v).children('td:first').text(theUILang[detailsIdToLangId[v.id]]);
 	});
 
-	$('#dlLimit').parent().children('h6').text(theUILang.Glob_max_downl);
-	$('#ulLimit').parent().children('h6').text(theUILang.Global_max_upl);
+	$('#dlLimit').parent().children('h5').text(theUILang.Glob_max_downl);
+	$('#ulLimit').parent().children('h5').text(theUILang.Global_max_upl);
 	$('#speedLimitsOk').text(theUILang.ok);
 	$('#speedLimitsCancel').text(theUILang.Cancel);
 
-	$('#torrentURL').text(theUILang.Torrent_URL+':');
+	$('#torrentFile').text(theUILang.Torrent_file+':');
 	$('#addUrl').text(theUILang.add_url);
 
 	$('#deleteOk').text(theUILang.ok);
