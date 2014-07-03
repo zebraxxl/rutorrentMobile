@@ -13,6 +13,7 @@ plugin.lastHref = "";
 plugin.currFilter = plugin.statusFilter.all;
 plugin.labelInEdit = false;
 plugin.eraseWithDataLoaded = false;
+plugin.ratioGroupsLoaded = false;
 plugin.getDirLoaded = false;
 plugin.bootstrapJS = false;
 
@@ -40,37 +41,18 @@ var detailsIdToLangId = {
 	'seeds' : "Seeds",
 	'peers' : "Peers",
 	'label' : 'Label',
-	'priority' : 'Priority'
+	'priority' : 'Priority',
+  'ratiogrp' : 'ratio'
 };
 
-if(!$type(theWebUI.getTrackerName))
+plugin.getRatioData = function(id)
 {
-        theWebUI.getTrackerName = function(announce)
-        {
-                var domain = '';
-                if(announce)
-                {
-                        var parts = announce.match(/^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/);
-                        if(parts && (parts.length>6))
-                        {
-                                domain = parts[6];
-                                if(!domain.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/))
-                                {
-                                        parts = domain.split(".");
-                                        if(parts.length>2)
-                                        {
-                                                if($.inArray(parts[parts.length-2]+"", ["co", "com", "net", "org"])>=0 ||
-                                                        $.inArray(parts[parts.length-1]+"", ["uk"])>=0)
-                                                        parts = parts.slice(parts.length-3);
-                                                else
-                                                        parts = parts.slice(parts.length-2);
-                                                domain = parts.join(".");
-                                        }
-                                }
-                        }
-                }
-                return(domain);
-        }
+	var curNo = -1;
+	var s = this.torrents[id].ratiogroup;
+	var arr = s.match(/rat_(\d{1,2})/);
+	if(arr && (arr.length>1))
+		curNo = arr[1];
+	return(curNo);
 }
 
 $(document).on('blur', 'input, textarea', function() {
@@ -302,6 +284,10 @@ plugin.fillDetails = function(d) {
 	$('#torrentDetails #status td:last').text(theWebUI.getStatusIcon(d)[1]);
 	$('#torrentPriority option').attr('selected', false);
 	$('#torrentPriority option[value=' + d.priority + ']').attr('selected', true);
+  if (this.ratioGroupsLoaded) {
+  	$('#torrentRatioGrp option').attr('selected', false);
+  	$('#torrentRatioGrp option[value=' + d.ratiogroup.replace('rat_','') + ']').attr('selected', true);
+  }
 	this.fillLabel(d.label);
 	$('#torrentDetails #done td:last').text(percent + '%');
 	$('#torrentDetails #downloaded td:last').text(theConverter.bytes(d.downloaded,2));
@@ -319,6 +305,10 @@ plugin.fillDetails = function(d) {
 
 plugin.changePriority = function() {
 	this.request('?action=dsetprio&v=' + $('#torrentPriority').val() + '&hash=' + this.torrent.hash);
+};
+
+plugin.changeRatioGrp = function() {
+	this.request('?action=setratio&v=' + $('#torrentRatioGrp').val() + '&hash=' + this.torrent.hash);
 };
 
 plugin.editLabel = function() {
@@ -951,6 +941,52 @@ plugin.init = function() {
 
 					plugin.eraseWithDataLoaded = true;
 				}
+        
+        if (rTorrentStub.prototype.setratio != undefined) {
+          plugin.ratioGroupsLoaded = true;
+          
+          $('#priority').after('<tr id="ratiogrp"><td></td><td><select id="torrentRatioGrp"></select></td></tr>');
+          
+          var ratioHTML = '<option value="-1">' + theUILang.mnuRatioUnlimited + '</option>'
+          $.each(theWebUI.ratios, function(i, v) {
+            ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
+          });
+  				$('#torrentRatioGrp').html(ratioHTML);
+          $('#torrentRatioGrp').change(function(){mobile.changeRatioGrp()});
+          
+        	rTorrentStub.prototype.setratio = function()
+        	{
+        		for(var i=0; i<this.vs.length; i++)
+        		{
+        			var wasNo = plugin.getRatioData(this.hashes[i]);
+        			if(wasNo!=this.vs[i])
+        			{
+        				if(wasNo>=0)
+        				{
+        					cmd = new rXMLRPCCommand('view.set_not_visible');
+        					cmd.addParameter("string",this.hashes[i]);
+        					cmd.addParameter("string","rat_"+wasNo);
+        					this.commands.push( cmd );
+        					cmd = new rXMLRPCCommand('d.views.remove');
+        					cmd.addParameter("string",this.hashes[i]);
+        					cmd.addParameter("string","rat_"+wasNo);
+        					this.commands.push( cmd );
+        				}
+        				if(this.vs[i]>=0)
+        				{
+        					cmd = new rXMLRPCCommand('d.views.push_back_unique');
+        					cmd.addParameter("string",this.hashes[i]);
+        					cmd.addParameter("string","rat_"+this.vs[i]);
+        					this.commands.push( cmd );
+        					cmd = new rXMLRPCCommand('view.set_visible');
+        					cmd.addParameter("string",this.hashes[i]);
+        					cmd.addParameter("string","rat_"+this.vs[i]);
+        					this.commands.push( cmd );
+        				}
+        			}
+        		}
+        	}
+        }
 
 				if ((plugin.getDirEnabled) &&(theWebUI.rDirBrowser != undefined)) {
 					plugin.getDirLoaded = true;
