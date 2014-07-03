@@ -46,7 +46,8 @@ var detailsIdToLangId = {
   'ratiogrp' : 'ratio',
   'throttle' : 'throttle',
   'seedtime' : 'seedingTime',
-  'dateAdded' : 'Added'
+  'dateAdded' : 'Added',
+  'trackerStatus' : 'Track_status'
 };
 
 plugin.getRatioData = function(id)
@@ -311,6 +312,7 @@ plugin.fillDetails = function(d) {
 	$('#torrentDetails #uploadSpeed td:last').text(theConverter.speed(d.ul));
 	$('#torrentDetails #seeds td:last').text(d.seeds_actual + " " + theUILang.of + " " + d.seeds_all + " " + theUILang.connected);
 	$('#torrentDetails #peers td:last').text(d.peers_actual + " " + theUILang.of + " " + d.peers_all + " " + theUILang.connected);
+  $('#torrentDetails #trackerStatus td:last').text(d.msg);
 };
 
 plugin.changePriority = function() {
