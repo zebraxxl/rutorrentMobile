@@ -946,13 +946,15 @@ plugin.init = function() {
           plugin.ratioGroupsLoaded = true;
           
           $('#priority').after('<tr id="ratiogrp"><td></td><td><select id="torrentRatioGrp"></select></td></tr>');
-          
-          var ratioHTML = '<option value="-1">' + theUILang.mnuRatioUnlimited + '</option>'
-          $.each(theWebUI.ratios, function(i, v) {
-            ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
-          });
-  				$('#torrentRatioGrp').html(ratioHTML);
           $('#torrentRatioGrp').change(function(){mobile.changeRatioGrp()});
+          
+          setTimeout(function() {          
+            var ratioHTML = '<option value="-1">' + theUILang.mnuRatioUnlimited + '</option>'
+            $.each(theWebUI.ratios, function(i, v) {
+              ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
+            });
+    				$('#torrentRatioGrp').html(ratioHTML);
+          }, 1000);
           
         	rTorrentStub.prototype.setratio = function()
         	{
