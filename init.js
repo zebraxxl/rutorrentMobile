@@ -14,6 +14,7 @@ plugin.currFilter = plugin.statusFilter.all;
 plugin.labelInEdit = false;
 plugin.eraseWithDataLoaded = false;
 plugin.ratioGroupsLoaded = false;
+plugin.throttleLoaded = false;
 plugin.getDirLoaded = false;
 plugin.bootstrapJS = false;
 
@@ -42,7 +43,8 @@ var detailsIdToLangId = {
 	'peers' : "Peers",
 	'label' : 'Label',
 	'priority' : 'Priority',
-  'ratiogrp' : 'ratio'
+  'ratiogrp' : 'ratio',
+  'throttle' : 'throttle'
 };
 
 plugin.getRatioData = function(id)
@@ -288,6 +290,10 @@ plugin.fillDetails = function(d) {
   	$('#torrentRatioGrp option').attr('selected', false);
   	$('#torrentRatioGrp option[value=' + d.ratiogroup.replace('rat_','') + ']').attr('selected', true);
   }
+  if (this.throttleLoaded) {
+    $('#torrentChannel option').attr('selected', false);
+    $('#torrentChannel option[value=' + d.throttle.replace('thr_','') + ']').attr('selected', true);
+  }
 	this.fillLabel(d.label);
 	$('#torrentDetails #done td:last').text(percent + '%');
 	$('#torrentDetails #downloaded td:last').text(theConverter.bytes(d.downloaded,2));
@@ -309,6 +315,10 @@ plugin.changePriority = function() {
 
 plugin.changeRatioGrp = function() {
 	this.request('?action=setratio&v=' + $('#torrentRatioGrp').val() + '&hash=' + this.torrent.hash);
+};
+
+plugin.changeChannel = function() {
+	this.request('?action=setthrottle&v=' + $('#torrentChannel').val() + '&hash=' + this.torrent.hash);
 };
 
 plugin.editLabel = function() {
@@ -941,6 +951,47 @@ plugin.init = function() {
 
 					plugin.eraseWithDataLoaded = true;
 				}
+        
+        if (rTorrentStub.prototype.setthrottle != undefined) {
+          plugin.throttleLoaded = true;
+          
+          $('#priority').after('<tr id="throttle"><td></td><td><select id="torrentChannel"></select></td></tr>');
+          $('#torrentChannel').change(function(){mobile.changeChannel()});
+          
+          setTimeout(function() {          
+            var throttleHTML = '<option value="-1">' + theUILang.mnuUnlimited + '</option>'
+            $.each(theWebUI.throttles, function(i, v) {
+              throttleHTML += '<option value="' + i + '">' + v.name + '</option>';
+            });
+    				$('#torrentChannel').html(throttleHTML);
+          }, 1000);
+          
+          rTorrentStub.prototype.setthrottle = function()
+          {
+                  for(var i=0; i<this.vs.length; i++)
+                  {
+                          var status = theWebUI.getStatusIcon(mobile.torrents[this.hashes[i]]);
+                          var needRestart = (status[1]==theUILang.Seeding) || (status[1]==theUILang.Downloading);
+                          var name = (this.vs[i]>=0) ? "thr_"+this.vs[i] : "";
+                          if(needRestart)
+                          {
+                                  cmd = new rXMLRPCCommand('d.stop');
+                                  cmd.addParameter("string",this.hashes[i]);
+                                  this.commands.push( cmd );
+                          }
+                          cmd = new rXMLRPCCommand('d.set_throttle_name');
+                          cmd.addParameter("string",this.hashes[i]);
+                          cmd.addParameter("string",name);
+                          this.commands.push( cmd );
+                          if(needRestart)
+                          {
+                                  cmd = new rXMLRPCCommand('d.start');
+                                  cmd.addParameter("string",this.hashes[i]);
+                                  this.commands.push( cmd );
+                          }
+                  }
+          }
+        }
         
         if (rTorrentStub.prototype.setratio != undefined) {
           plugin.ratioGroupsLoaded = true;
