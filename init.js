@@ -15,6 +15,7 @@ plugin.labelInEdit = false;
 plugin.eraseWithDataLoaded = false;
 plugin.ratioGroupsLoaded = false;
 plugin.throttleLoaded = false;
+plugin.seedingtimeLoaded = false;
 plugin.getDirLoaded = false;
 plugin.bootstrapJS = false;
 
@@ -302,8 +303,10 @@ plugin.fillDetails = function(d) {
 	$('#torrentDetails #downloaded td:last').text(theConverter.bytes(d.downloaded,2));
 	$('#torrentDetails #size td:last').text(theConverter.bytes(d.size,2));
 	$('#torrentDetails #timeElapsed td:last').text(theConverter.time(Math.floor((new Date().getTime()-theWebUI.deltaTime)/1000-iv(d.state_changed)),true));
-  $('#torrentDetails #seedtime td:last').text((d.seedingtime>3600*24*365) ? theConverter.time(new Date().getTime()/1000-(iv(d.seedingtime)+theWebUI.deltaTime/1000),true) : "");
-  $('#torrentDetails #dateAdded td:last').text((d.addtime>3600*24*365) ? theConverter.date(iv(d.addtime)+theWebUI.deltaTime/1000) : "");
+  if (this.seedingtimeLoaded) {
+    $('#torrentDetails #seedtime td:last').text((d.seedingtime>3600*24*365) ? theConverter.time(new Date().getTime()/1000-(iv(d.seedingtime)+theWebUI.deltaTime/1000),true) : "");
+    $('#torrentDetails #dateAdded td:last').text((d.addtime>3600*24*365) ? theConverter.date(iv(d.addtime)+theWebUI.deltaTime/1000) : "");
+  }
 	$('#torrentDetails #remaining td:last').html((d.eta ==- 1) ? "&#8734;" : theConverter.time(d.eta));
 	$('#torrentDetails #ratio td:last').html((d.ratio ==- 1) ? "&#8734;" : theConverter.round(d.ratio/1000,3));
 	$('#torrentDetails #downloadSpeed td:last').text(theConverter.speed(d.dl));
@@ -1054,8 +1057,9 @@ plugin.init = function() {
 				}
         
         if (thePlugins.isInstalled('seedingtime')) {
-           $('#timeElapsed').after('<tr id="seedtime"><td></td><td></td></tr>');
-           $('#timeElapsed').after('<tr id="dateAdded"><td></td><td></td></tr>');
+          plugin.seedingtimeLoaded = true;
+          $('#timeElapsed').after('<tr id="seedtime"><td></td><td></td></tr>');
+          $('#timeElapsed').after('<tr id="dateAdded"><td></td><td></td></tr>');
         }
 
 				plugin.update();
