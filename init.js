@@ -1083,8 +1083,8 @@ plugin.onLangLoaded = function() {
 		$(v).children('td:first').text(theUILang[detailsIdToLangId[v.id]]);
 	});
 
-	$('#dlLimit').parent().children('h5').text(theUILang.Glob_max_downl);
-	$('#ulLimit').parent().children('h5').text(theUILang.Global_max_upl);
+	$('#dlLimit').parent().children('label').children('h5').text(theUILang.Glob_max_downl);
+	$('#ulLimit').parent().children('label').children('h5').text(theUILang.Global_max_upl);
 	$('#speedLimitsOk').text(theUILang.ok);
 	$('#speedLimitsCancel').text(theUILang.Cancel);
 
