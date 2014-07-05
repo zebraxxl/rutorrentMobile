@@ -944,7 +944,7 @@ plugin.init = function() {
         {
         	if(!$("#torrent_file").val().match(".torrent")) 
         	{
-        		alert(theUILang.Not_torrent_file);
+            plugin.showAlert(theUILang.Not_torrent_file,"alert-danger");
          		return(false);
        		}
           plugin.createiFrame();
