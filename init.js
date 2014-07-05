@@ -29,19 +29,20 @@ var pageToHash = {
 };
 
 var detailsIdToLangId = {
-	'status' : "Status",
-	'done' : "Done",
+	'status' : 'Status',
+	'done' : 'Done',
 	'downloaded' : 'Downloaded',
 	'size' : 'Size',
-	'timeElapsed' : "Time_el",
-	'remaining' : "Remaining",
-	'ratio' : "Ratio",
-	'downloadSpeed' : "Down_speed",
-	'wasted' : "Wasted",
-	'uploaded' : "Uploaded",
-	'uploadSpeed' : "Ul_speed",
-	'seeds' : "Seeds",
-	'peers' : "Peers",
+	'timeElapsed' : 'Time_el',
+	'remaining' : 'Remaining',
+  'eta' : 'ETA',
+	'ratio' : 'Ratio',
+	'downloadSpeed' : 'Down_speed',
+	'wasted' : 'Wasted',
+	'uploaded' : 'Uploaded',
+	'uploadSpeed' : 'Ul_speed',
+	'seeds' : 'Seeds',
+	'peers' : 'Peers',
 	'label' : 'Label',
 	'priority' : 'Priority',
   'ratiogrp' : 'ratio',
@@ -277,6 +278,7 @@ plugin.fillLabel = function(label) {
 };
 
 plugin.fillDetails = function(d) {
+  console.log(d);
 	$('#torrentName').text(d.name);
 
 	var percent = d.done / 10.0;
@@ -302,12 +304,13 @@ plugin.fillDetails = function(d) {
 	$('#torrentDetails #done td:last').text(percent + '%');
 	$('#torrentDetails #downloaded td:last').text(theConverter.bytes(d.downloaded,2));
 	$('#torrentDetails #size td:last').text(theConverter.bytes(d.size,2));
+  $('#torrentDetails #remaining td:last').text(theConverter.bytes(d.remaining,2));
 	$('#torrentDetails #timeElapsed td:last').text(theConverter.time(Math.floor((new Date().getTime()-theWebUI.deltaTime)/1000-iv(d.state_changed)),true));
   if (this.seedingtimeLoaded) {
     $('#torrentDetails #seedtime td:last').text((d.seedingtime>3600*24*365) ? theConverter.time(new Date().getTime()/1000-(iv(d.seedingtime)+theWebUI.deltaTime/1000),true) : "");
     $('#torrentDetails #dateAdded td:last').text((d.addtime>3600*24*365) ? theConverter.date(iv(d.addtime)+theWebUI.deltaTime/1000) : "");
   }
-	$('#torrentDetails #remaining td:last').html((d.eta ==- 1) ? "&#8734;" : theConverter.time(d.eta));
+	$('#torrentDetails #eta td:last').html((d.eta ==- 1) ? "&#8734;" : theConverter.time(d.eta));
 	$('#torrentDetails #ratio td:last').html((d.ratio ==- 1) ? "&#8734;" : theConverter.round(d.ratio/1000,3));
 	$('#torrentDetails #downloadSpeed td:last').text(theConverter.speed(d.dl));
 	$('#torrentDetails #wasted td:last').text(theConverter.bytes(d.skip_total,2));
