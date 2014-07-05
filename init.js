@@ -278,7 +278,6 @@ plugin.fillLabel = function(label) {
 };
 
 plugin.fillDetails = function(d) {
-  console.log(d);
 	$('#torrentName').text(d.name);
 
 	var percent = d.done / 10.0;
