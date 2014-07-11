@@ -567,8 +567,7 @@ plugin.loadFiles = function() {
       var files = {root: true, directory: true, priority: -1, container: {}};
 
       for (var i = 0; i < rawFiles.length; i++) {
-        var path = rawFiles[i].name.split('/');
-
+        var path = rawFiles[i].name.replace(/^\/|\/$/g, '').split('/');
         var currDir = files;
         for (var j = 0; j < path.length -1; j++) {
           if (currDir.container[path[j]] == undefined) {

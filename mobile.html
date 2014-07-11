@@ -1,38 +1,40 @@
 <div id="mainContainer">
   
-  <nav id="mainNavbar" class="navbar navbar-inverse container">
-    <ul class="nav navbar-inverse">
-      <li>
-        <a id="navBack" href="javascript://void();" onclick="window.history.go(-1);"><i class="glyphicon glyphicon-arrow-left icon-white"></i></a>
-      </li>
-      <li>
-        <a id="navSettings" href="javascript://void();" onclick="mobile.showSettings();"><i class="glyphicon glyphicon-cog icon-white"></i></a>
-      </li>
-      <li>
-        <a id="navAdd" href="javascript://void();" onclick="mobile.addTorrent();"><i class="glyphicon glyphicon-plus icon-white"></i></a>
-      </li>
-      <li class="torrentControl divider-vertical"></li>
-      <li class="torrentControl">
-        <a id="torrentStart" href="javascript://void();" onclick="mobile.start();"><i class="glyphicon glyphicon-play icon-white"></i></a>
-      </li>
-      <li class="torrentControl">
-        <a id="torrentStop" href="javascript://void();" onclick="mobile.stop();"><i class="glyphicon glyphicon-stop icon-white"></i></a>
-      </li>
-      <li class="torrentControl">
-        <a id="torrentPause" href="javascript://void();" onclick="mobile.pause();"><i class="glyphicon glyphicon-pause icon-white"></i></a>
-      </li>
-      <li class='torrentControl'>
-        <a id="torrentDelete" href="javascript://void();" onclick="mobile.delete();"><i class="glyphicon glyphicon-trash icon-white"></i></a>
-      </li>
-      <li>
-        <div>
-          <i class="glyphicon glyphicon-upload icon-white"></i><span id="upspeed"></span>
-        </div>
-        <div>
-          <i class="glyphicon glyphicon-download icon-white"></i><span id="downspeed"></span>
-        </div>
-      </li>
-    </ul>
+  <nav id="mainNavbar" class="navbar navbar-inverse">
+    <div class="container">
+      <ul class="nav navbar-inverse">
+        <li>
+          <a id="navBack" href="javascript://void();" onclick="window.history.go(-1);"><i class="glyphicon glyphicon-arrow-left icon-white"></i></a>
+        </li>
+        <li>
+          <a id="navSettings" href="javascript://void();" onclick="mobile.showSettings();"><i class="glyphicon glyphicon-cog icon-white"></i></a>
+        </li>
+        <li>
+          <a id="navAdd" href="javascript://void();" onclick="mobile.addTorrent();"><i class="glyphicon glyphicon-plus icon-white"></i></a>
+        </li>
+        <li class="torrentControl divider-vertical"></li>
+        <li class="torrentControl">
+          <a id="torrentStart" href="javascript://void();" onclick="mobile.start();"><i class="glyphicon glyphicon-play icon-white"></i></a>
+        </li>
+        <li class="torrentControl">
+          <a id="torrentStop" href="javascript://void();" onclick="mobile.stop();"><i class="glyphicon glyphicon-stop icon-white"></i></a>
+        </li>
+        <li class="torrentControl">
+          <a id="torrentPause" href="javascript://void();" onclick="mobile.pause();"><i class="glyphicon glyphicon-pause icon-white"></i></a>
+        </li>
+        <li class='torrentControl'>
+          <a id="torrentDelete" href="javascript://void();" onclick="mobile.delete();"><i class="glyphicon glyphicon-trash icon-white"></i></a>
+        </li>
+        <li>
+          <div>
+            <i class="glyphicon glyphicon-upload icon-white"></i><span id="upspeed"></span>
+          </div>
+          <div>
+            <i class="glyphicon glyphicon-download icon-white"></i><span id="downspeed"></span>
+          </div>
+        </li>
+      </ul>
+    </div>
   </nav>
   
   <div class="mainContainer" id="torrentsList">
