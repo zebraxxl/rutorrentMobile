@@ -100,7 +100,7 @@ h5, #detailsTrackersPage a, #detailsFilesPage a, #getDirList tr {
   display: inline-block;
   margin-left: 14px;
 }
-#detailsFilesPage .glyphicon-file {
+#detailsFilesPage .glyphicon-file, #detailsFilesPage .glyphicon-folder-open {
   margin-left: -14px;
 }
 select {
