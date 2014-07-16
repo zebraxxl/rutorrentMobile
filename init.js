@@ -297,22 +297,22 @@ plugin.fillDetails = function(d) {
   $('#torrentProgress .progress-bar').text(percent + '% of ' + theConverter.bytes(d.size,2));
 
   $('#torrentDetails #status td:last').text(theWebUI.getStatusIcon(d)[1]);
-  $('#torrentPriority option').attr('selected', false);
-  $('#torrentPriority option[value=' + d.priority + ']').attr('selected', true);
+  $('#torrentPriority option').prop('selected', false);
+  $('#torrentPriority option[value=' + d.priority + ']').prop('selected', true);
   if (this.ratioGroupsLoaded) {
-    $('#torrentRatioGrp option').attr('selected', false);
+    $('#torrentRatioGrp option').prop('selected', false);
     if (d.ratiogroup) {
-      $('#torrentRatioGrp option[value=' + d.ratiogroup.replace('rat_','') + ']').attr('selected', true);
+      $('#torrentRatioGrp option[value=' + d.ratiogroup.replace('rat_','') + ']').prop('selected', true);
     } else {
-      $('#torrentRatioGrp option[value=-1]').attr('selected', true);
+      $('#torrentRatioGrp option[value=-1]').prop('selected', true);
     }
   }
   if (this.throttleLoaded) {
-    $('#torrentChannel option').attr('selected', false);
+    $('#torrentChannel option').prop('selected', false);
     if (d.throttle) {
-      $('#torrentChannel option[value=' + d.throttle.replace('thr_','') + ']').attr('selected', true);
+      $('#torrentChannel option[value=' + d.throttle.replace('thr_','') + ']').prop('selected', true);
     } else {
-      $('#torrentChannel option[value=-1]').attr('selected', true);
+      $('#torrentChannel option[value=-1]').prop('selected', true);
     }
   }
   this.fillLabel(d.label);
@@ -654,7 +654,7 @@ plugin.delete = function() {
   } else {
 
     if ((this.eraseWithDataLoaded) && (this.eraseWithDataDefault != undefined)) {
-      $('#deleteWithData input').attr('checked', this.eraseWithDataDefault);
+      $('#deleteWithData input').prop('checked', this.eraseWithDataDefault);
     }
     if (theWebUI.settings["webui.confirm_when_deleting"]) {
       $('#confimTorrentDelete h5').text(theUILang.areYouShure + ' ' + this.torrent.name);
@@ -666,7 +666,7 @@ plugin.delete = function() {
 };
 
 plugin.deleteConfimed = function() {
-  if ((this.eraseWithDataLoaded) && ($('#deleteWithData input').attr('checked'))) {
+  if ((this.eraseWithDataLoaded) && ($('#deleteWithData input').prop('checked'))) {
     this.request('?action=removewithdata&hash=' + this.torrent.hash);
   } else {
     this.request('?action=remove&hash=' + this.torrent.hash);
@@ -1000,13 +1000,13 @@ if (start) {
       var makeAddRequest = function(frm)
       {
         var s = theURLs.AddTorrentURL+"?";
-        if($("#torrents_start_stopped").attr("checked")) {
+        if($("#torrents_start_stopped").prop("checked")) {
           s += 'torrents_start_stopped=1&';
         }
-        if($("#fast_resume").attr("checked")) {
+        if($("#fast_resume").prop("checked")) {
           s += 'fast_resume=1&';
         }
-        if($("#not_add_path").attr("checked")) {
+        if($("#not_add_path").prop("checked")) {
           s += 'not_add_path=1&';
         }
         var dir = $.trim($("#dir_edit").val());
