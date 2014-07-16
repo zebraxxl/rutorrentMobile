@@ -301,11 +301,19 @@ plugin.fillDetails = function(d) {
   $('#torrentPriority option[value=' + d.priority + ']').attr('selected', true);
   if (this.ratioGroupsLoaded) {
     $('#torrentRatioGrp option').attr('selected', false);
-    $('#torrentRatioGrp option[value=' + d.ratiogroup.replace('rat_','') + ']').attr('selected', true);
+    if (d.ratiogroup) {
+      $('#torrentRatioGrp option[value=' + d.ratiogroup.replace('rat_','') + ']').attr('selected', true);
+    } else {
+      $('#torrentRatioGrp option[value=-1]').attr('selected', true);
+    }
   }
   if (this.throttleLoaded) {
     $('#torrentChannel option').attr('selected', false);
-    $('#torrentChannel option[value=' + d.throttle.replace('thr_','') + ']').attr('selected', true);
+    if (d.throttle) {
+      $('#torrentChannel option[value=' + d.throttle.replace('thr_','') + ']').attr('selected', true);
+    } else {
+      $('#torrentChannel option[value=-1]').attr('selected', true);
+    }
   }
   this.fillLabel(d.label);
   $('#torrentDetails #done td:last').text(percent + '%');
