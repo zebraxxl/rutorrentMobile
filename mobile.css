@@ -67,6 +67,9 @@ div input {
   padding-top: 5px;
   vertical-align: middle;
 } 
+#torrentDetails #detailsDetailsPage tr td:first-child {
+  white-space: nowrap;
+}
 #detailsFilesPage a {
   padding: 3px;
 }
