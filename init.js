@@ -1034,7 +1034,7 @@ if (start) {
         return(makeAddRequest(this));
       });
 
-      if (rTorrentStub.prototype.removewithdata != undefined) {
+      if (thePlugins.isInstalled('erasedata')) {
         $('#confimTorrentDelete h5').after(
           '<div class="checkbox"><label" id="deleteWithData">' +
           '<input type="checkbox" style="float: none;"> ' + theUILang.Delete_data + '</label></div>');
@@ -1042,19 +1042,11 @@ if (start) {
           plugin.eraseWithDataLoaded = true;
         }
         
-        if (rTorrentStub.prototype.setthrottle != undefined) {
+        if (thePlugins.isInstalled('throttle')) {
           plugin.throttleLoaded = true;
           
           $('#priority').after('<tr id="throttle"><td></td><td><select id="torrentChannel"></select></td></tr>');
           $('#torrentChannel').change(function(){mobile.changeChannel()});
-          
-          setTimeout(function() {          
-            var throttleHTML = '<option value="-1">' + theUILang.mnuUnlimited + '</option>'
-            $.each(theWebUI.throttles, function(i, v) {
-              throttleHTML += '<option value="' + i + '">' + v.name + '</option>';
-            });
-            $('#torrentChannel').html(throttleHTML);
-          }, 1000);
           
           rTorrentStub.prototype.setthrottle = function()
           {
@@ -1083,19 +1075,11 @@ if (start) {
           }
         }
         
-        if (rTorrentStub.prototype.setratio != undefined) {
+        if (thePlugins.isInstalled('ratio')) {
           plugin.ratioGroupsLoaded = true;
           
           $('#priority').after('<tr id="ratiogrp"><td></td><td><select id="torrentRatioGrp"></select></td></tr>');
           $('#torrentRatioGrp').change(function(){mobile.changeRatioGrp()});
-          
-          setTimeout(function() {          
-            var ratioHTML = '<option value="-1">' + theUILang.mnuRatioUnlimited + '</option>'
-            $.each(theWebUI.ratios, function(i, v) {
-              ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
-            });
-            $('#torrentRatioGrp').html(ratioHTML);
-          }, 1000);
           
           rTorrentStub.prototype.setratio = function()
           {
@@ -1131,7 +1115,7 @@ if (start) {
           }
         }
 
-        if ((plugin.getDirEnabled) &&(theWebUI.rDirBrowser != undefined)) {
+        if ((plugin.getDirEnabled) && (thePlugins.isInstalled('_getdir'))) {
           plugin.getDirLoaded = true;
 
           $('#dirEditBlock').append('<input type="button" class="btn btn-default btn-sm" id="showGetDir" type="button" onclick="mobile.showGetDir();" value="..."></input>');
@@ -1174,6 +1158,18 @@ plugin.onLangLoaded = function() {
 
   $('#deleteOk').text(theUILang.ok);
   $('#deleteCancel').text(theUILang.Cancel);
+  
+  var throttleHTML = '<option value="-1">' + theUILang.mnuUnlimited + '</option>'
+  $.each(theWebUI.throttles, function(i, v) {
+    throttleHTML += '<option value="' + i + '">' + v.name + '</option>';
+  });
+  $('#torrentChannel').html(throttleHTML);
+  
+  var ratioHTML = '<option value="-1">' + theUILang.mnuRatioUnlimited + '</option>'
+  $.each(theWebUI.ratios, function(i, v) {
+    ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
+  });
+  $('#torrentRatioGrp').html(ratioHTML);
 };
 
 /**
