@@ -49,13 +49,16 @@ div input {
   white-space: nowrap;
   font-size: 0;
 }
-#torrentsList .nav > li {
-  display: inline-block;
-}
-#torrentsList .nav > li > a {
+#torrentsList .nav > li > a > span {
+  float: left;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+#torrentsList .nav > li > a > .caret {
+  position: relative;
+  display: inline;
+  top: 9px;
 }
 #torrentDetails #detailsDetailsPage #label input {
   display: inline;
@@ -72,8 +75,7 @@ div input {
 }
 .nav-tabs {
   background-color: #fff;
-  padding-top: 3px;
-  padding-left: 3px;
+  padding: 3px 3px 0 3px;
 }
 .progress .progress-bar {
   white-space: nowrap;
@@ -82,9 +84,8 @@ div input {
 .table {
   margin-bottom: 0;
 }
-h5, #detailsTrackersPage a, #detailsFilesPage a, #getDirList tr {
+h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, .nav a, #getDirList td {
   word-break:break-all;
-  /*  word-break:break-word;*/
 }
 #detailsFilesPage > div {
   padding-right: 44px;
@@ -118,7 +119,7 @@ a:focus {
   border-top-color: #fff !important;
   border-bottom-color: #fff !important;
 }
-.nav-tabs .active .dropdown-toggle .caret {
+.nav-tabs .active .caret {
   border-top-color: #555 !important;
   border-bottom-color: #555 !important;
 }
