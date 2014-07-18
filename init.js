@@ -1159,17 +1159,21 @@ plugin.onLangLoaded = function() {
   $('#deleteOk').text(theUILang.ok);
   $('#deleteCancel').text(theUILang.Cancel);
   
-  var throttleHTML = '<option value="-1">' + theUILang.mnuUnlimited + '</option>'
-  $.each(theWebUI.throttles, function(i, v) {
-    throttleHTML += '<option value="' + i + '">' + v.name + '</option>';
-  });
-  $('#torrentChannel').html(throttleHTML);
+  if (this.throttleLoaded) {
+    var throttleHTML = '<option value="-1">' + theUILang.mnuUnlimited + '</option>'
+    $.each(theWebUI.throttles, function(i, v) {
+      throttleHTML += '<option value="' + i + '">' + v.name + '</option>';
+    });
+    $('#torrentChannel').html(throttleHTML);
+  }
   
-  var ratioHTML = '<option value="-1">' + theUILang.mnuRatioUnlimited + '</option>'
-  $.each(theWebUI.ratios, function(i, v) {
-    ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
-  });
-  $('#torrentRatioGrp').html(ratioHTML);
+  if (this.ratioGroupsLoaded) {
+    var ratioHTML = '<option value="-1">' + theUILang.mnuRatioUnlimited + '</option>'
+    $.each(theWebUI.ratios, function(i, v) {
+      ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
+    });
+    $('#torrentRatioGrp').html(ratioHTML);
+  }
 };
 
 /**
