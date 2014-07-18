@@ -52,6 +52,36 @@ var detailsIdToLangId = {
   'trackerStatus' : 'Track_status'
 };
 
+if(!$type(theWebUI.getTrackerName))
+{
+  theWebUI.getTrackerName = function(announce)
+  {
+    var domain = '';
+    if(announce)
+    {
+      var parts = announce.match(/^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*):?([^:@]*))?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/);
+      if(parts && (parts.length>6))
+      {
+        domain = parts[6];
+        if(!domain.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/))
+        {
+          parts = domain.split(".");
+          if(parts.length>2)
+          {
+            if($.inArray(parts[parts.length-2]+"", ["co", "com", "net", "org"])>=0 ||
+            $.inArray(parts[parts.length-1]+"", ["uk"])>=0)
+            parts = parts.slice(parts.length-3);
+            else
+            parts = parts.slice(parts.length-2);
+            domain = parts.join(".");
+          }
+        }
+      }
+    }
+    return(domain);
+  }
+}
+
 $(document).on('blur', 'input, textarea', function() {
   setTimeout(function() {
     $(window).scrollTop($(window).scrollTop()+1);
