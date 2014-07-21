@@ -1,6 +1,8 @@
+/*** Configurable Options ***/
 plugin.enableAutodetect = true;
-plugin.eraseWithDataDefault = false;
 plugin.tabletsDetect = true;
+plugin.eraseWithDataDefault = false;
+/*** End Configurable Options ***/
 
 plugin.statusFilter = {downloading: 1, completed: 2, label: 4, all: 3, tracker: 5, active: 6, inactive: 7, error: 8};
 plugin.navFilter = undefined;
