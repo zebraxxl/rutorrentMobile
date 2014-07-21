@@ -1,6 +1,5 @@
 plugin.enableAutodetect = true;
 plugin.eraseWithDataDefault = false;
-plugin.navBarToBottom = true;
 plugin.getDirEnabled = true;
 plugin.tabletsDetect = true;
 
@@ -997,13 +996,8 @@ if (start) {
         plugin.updateTrackerDropdown();
       });
 
-      if (mobile.navBarToBottom) {
-        $('#mainNavbar').addClass('navbar-fixed-bottom');
-        $('.nav-tabs').addClass('navbar-fixed-top');
-      } else {
-        $('#mainNavbar').addClass('navbar-fixed-top');
-        $('.nav-tabs').addClass('navbar-fixed-bottom');
-      }
+      $('#mainNavbar').addClass('navbar-fixed-bottom');
+      $('.nav-tabs').addClass('navbar-fixed-top');
 
       $('.torrentControl').css('display', 'none');
 
