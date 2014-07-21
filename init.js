@@ -835,18 +835,20 @@ plugin.update = function() {
         var uniqueTrackers = [];
         for (var i = 0; i < trackers.length; i++) {
           var trackerName = theWebUI.getTrackerName(trackers[i].name);
-          if (trackerName in trackersCount) {
-            if ($.inArray(trackerName, uniqueTrackers) == -1) {
-              trackersCount[trackerName]++;
+          if (trackerName) {
+            if (trackerName in trackersCount) {
+              if ($.inArray(trackerName, uniqueTrackers) == -1) {
+                trackersCount[trackerName]++;
+              }
+            } else {
+              trackersCount[trackerName] = 1;
             }
-          } else {
-            trackersCount[trackerName] = 1;
-          }
-          if (plugin.trackerIds[trackerName] == undefined) {
-            plugin.trackerIds[trackerName] = nextTrackerId++;
-          }
-          if ($.inArray(trackerName, uniqueTrackers) == -1) {
-            uniqueTrackers.push(trackerName);
+            if (plugin.trackerIds[trackerName] == undefined) {
+              plugin.trackerIds[trackerName] = nextTrackerId++;
+            }
+            if ($.inArray(trackerName, uniqueTrackers) == -1) {
+              uniqueTrackers.push(trackerName);
+            }
           }
         }
         trackersMap[n] = uniqueTrackers;
