@@ -1,6 +1,5 @@
 plugin.enableAutodetect = true;
 plugin.eraseWithDataDefault = false;
-plugin.getDirEnabled = true;
 plugin.tabletsDetect = true;
 
 plugin.statusFilter = {downloading: 1, completed: 2, label: 4, all: 3, tracker: 5, active: 6, inactive: 7, error: 8};
@@ -1141,9 +1140,8 @@ if (start) {
           }
         }
 
-        if ((plugin.getDirEnabled) && (thePlugins.isInstalled('_getdir'))) {
+        if (thePlugins.isInstalled('_getdir')) {
           plugin.getDirLoaded = true;
-
           $('#dirEditBlock').append('<input type="button" class="btn btn-default btn-sm" id="showGetDir" type="button" onclick="mobile.showGetDir();" value="..."></input>');
         }
         
