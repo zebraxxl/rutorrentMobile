@@ -916,6 +916,12 @@ if ((!start) && this.enableAutodetect) {
 }
 
 if (start) {
+  $.each(thePlugins.list, function(i, v) {
+    if (v.name != 'rpc' && v.name != 'httprpc' && v.name != '_getdir' && v.name != 'throttle' && v.name != 'ratio' && v.name != 'erasedata' && v.name != 'seedingtime' && v.name != 'mobile') {
+      v.disable();
+    }
+  });
+
   this.lastHref = window.location.href;
 
   setInterval(function() {plugin.backListener();}, 500);
