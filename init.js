@@ -322,7 +322,7 @@ plugin.fillDetails = function(d) {
   $('#torrentProgress .progress-bar').css('width', percent + '%');
   $('#torrentProgress .progress-bar').text(percent + '% of ' + theConverter.bytes(d.size,2));
 
-  $('#torrentDetails #status td:last').text(theWebUI.getStatusIcon(d)[1]);
+  $('#torrentDetails #status td:last').text(theWebUI.getStatusIcon(d)[1] + ' ').append('<button class="btn btn-default btn-sm" type="button" onclick="mobile.recheck();"><i class="glyphicon glyphicon-refresh .icon-black"></i></button>');
   $('#torrentPriority option').prop('selected', false);
   $('#torrentPriority option[value=' + d.priority + ']').prop('selected', true);
   if (this.ratioGroupsLoaded) {
@@ -670,6 +670,16 @@ plugin.pause = function() {
       this.request('?action=pause&hash=' + this.torrent.hash);
     } else if (((status & dStatus.paused) && !(status & dStatus.checking) && !(status & dStatus.hashing))) {
       this.request('?action=unpause&hash=' + this.torrent.hash);
+    }
+  }
+};
+
+plugin.recheck = function() {
+  if (this.torrent != undefined) {
+    var status = this.torrent.state;
+
+    if (!(status & dStatus.checking) && !(status & dStatus.hashing)) {
+      this.request('?action=recheck&hash=' + this.torrent.hash);
     }
   }
 };
