@@ -60,6 +60,10 @@ div input {
   display: inline;
   top: 9px;
 }
+#torrentDetails #torrentDetailsHeader {
+  padding-left: 8px;
+  padding-right: 8px;
+}
 #torrentDetails #detailsDetailsPage #label input {
   display: inline;
   height: 24px;
