@@ -45,10 +45,6 @@ var detailsIdToLangId = {
   'peers' : 'Peers',
   'label' : 'Label',
   'priority' : 'Priority',
-  'ratiogrp' : 'ratio',
-  'throttle' : 'throttle',
-  'seedtime' : 'seedingTime',
-  'dateAdded' : 'Added',
   'trackerStatus' : 'Track_status'
 };
 
@@ -789,6 +785,7 @@ plugin.loadRatio = function () {
       ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
     });
     $('#torrentRatioGrp').html(ratioHTML);
+    $('#ratiogrp').children('td:first').text(theUILang.ratio);
     
     rTorrentStub.prototype.setratio = function()
     {
@@ -837,6 +834,7 @@ plugin.loadThrottle = function () {
       throttleHTML += '<option value="' + i + '">' + v.name + '</option>';
     });
     $('#torrentChannel').html(throttleHTML);
+    $('#throttle').children('td:first').text(theUILang.throttle);
   
     rTorrentStub.prototype.setthrottle = function()
     {
@@ -865,6 +863,18 @@ plugin.loadThrottle = function () {
     }
   } else {
     setTimeout(function(){plugin.loadThrottle()}, 1000);
+  }
+};
+
+plugin.loadSeedingTime = function () {
+  var seedingtime = thePlugins.get("seedingtime");
+  if (seedingtime.allStuffLoaded) {
+    $('#timeElapsed').after('<tr id="seedtime"><td></td><td></td></tr>');
+    $('#timeElapsed').after('<tr id="dateAdded"><td></td><td></td></tr>');
+    $('#dateAdded').children('td:first').text(theUILang.Added);
+    $('#seedtime').children('td:first').text(theUILang.seedingTime);
+  } else {
+    setTimeout(function(){plugin.loadSeedingTime()}, 1000);
   }
 };
 
@@ -1179,8 +1189,7 @@ if (start) {
         
         if (thePlugins.isInstalled('seedingtime')) {
           plugin.seedingtimeLoaded = true;
-          $('#timeElapsed').after('<tr id="seedtime"><td></td><td></td></tr>');
-          $('#timeElapsed').after('<tr id="dateAdded"><td></td><td></td></tr>');
+          plugin.loadSeedingTime();
         }
         plugin.onLangLoaded();
         plugin.update();
