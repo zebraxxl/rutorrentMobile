@@ -687,7 +687,7 @@ plugin.delete = function() {
       $('#deleteWithData input').prop('checked', this.eraseWithDataDefault);
     }
     if (theWebUI.settings["webui.confirm_when_deleting"]) {
-      $('#confimTorrentDelete h5').text(theUILang.areYouShure + ' ' + this.torrent.name);
+      $('#confimTorrentDelete h5').text(theUILang.Rem_torrents_prompt + ' ' + this.torrent.name);
       this.showPage('confimTorrentDelete');
     } else {
       this.deleteConfimed();
@@ -730,7 +730,7 @@ plugin.drawGetDir = function(path, first) {
       while ((match = re.exec(data)) != null) {
         if (match[2] == '.') {
           html = '<h5 style="padding:8px;">' + decodeURIComponent(match[1]) + '</h5>' +
-          '<button class="btn btn-default" style="margin-bottom: 15px; margin-left: 10px;" onclick="mobile.chooseGetDir(\'' + decodeURIComponent(match[1]) + '\');">' + theUILang.Choose + '</button>' +
+          '<button class="btn btn-default" style="margin-bottom: 15px; margin-left: 10px;" onclick="mobile.chooseGetDir(\'' + decodeURIComponent(match[1]) + '\');">' + theUILang.ok + '</button>' +
           html;
         } else {
           html += '<tr onclick="mobile.drawGetDir(\'' + decodeURIComponent(match[1]) + '\');">' +
@@ -1028,8 +1028,6 @@ if (start) {
       );
       $('#torrentPriority').change(function(){mobile.changePriority()});
 
-      plugin.loadLang();
-
       var makeAddRequest = function(frm)
       {
         var s = theURLs.AddTorrentURL+"?";
@@ -1158,7 +1156,7 @@ if (start) {
           $('#timeElapsed').after('<tr id="seedtime"><td></td><td></td></tr>');
           $('#timeElapsed').after('<tr id="dateAdded"><td></td><td></td></tr>');
         }
-
+        plugin.onLangLoaded();
         plugin.update();
       }
     });
