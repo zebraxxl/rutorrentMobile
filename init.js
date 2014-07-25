@@ -779,6 +779,95 @@ plugin.updateTrackerDropdown = function () {
   }
 };
 
+plugin.loadRatio = function () {
+  var ratio = thePlugins.get("ratio");
+  if (ratio.allStuffLoaded) {
+    $('#priority').after('<tr id="ratiogrp"><td></td><td><select id="torrentRatioGrp"></select></td></tr>');
+    $('#torrentRatioGrp').change(function(){mobile.changeRatioGrp()});
+    var ratioHTML = '<option value="-1">' + theUILang.mnuRatioUnlimited + '</option>'
+    $.each(theWebUI.ratios, function(i, v) {
+      ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
+    });
+    $('#torrentRatioGrp').html(ratioHTML);
+    
+    rTorrentStub.prototype.setratio = function()
+    {
+      for(var i=0; i<this.vs.length; i++)
+      {
+        var wasNo = plugin.getRatioData(this.hashes[i]);
+        if(wasNo!=this.vs[i])
+        {
+          if(wasNo>=0)
+          {
+            cmd = new rXMLRPCCommand('view.set_not_visible');
+            cmd.addParameter("string",this.hashes[i]);
+            cmd.addParameter("string","rat_"+wasNo);
+            this.commands.push( cmd );
+            cmd = new rXMLRPCCommand('d.views.remove');
+            cmd.addParameter("string",this.hashes[i]);
+            cmd.addParameter("string","rat_"+wasNo);
+            this.commands.push( cmd );
+          }
+          if(this.vs[i]>=0)
+          {
+            cmd = new rXMLRPCCommand('d.views.push_back_unique');
+            cmd.addParameter("string",this.hashes[i]);
+            cmd.addParameter("string","rat_"+this.vs[i]);
+            this.commands.push( cmd );
+            cmd = new rXMLRPCCommand('view.set_visible');
+            cmd.addParameter("string",this.hashes[i]);
+            cmd.addParameter("string","rat_"+this.vs[i]);
+            this.commands.push( cmd );
+          }
+        }
+      }
+    }
+  } else {
+    setTimeout(function(){plugin.loadRatio()}, 1000);
+  }
+};
+
+plugin.loadThrottle = function () {
+  var throttle = thePlugins.get("throttle");
+  if (throttle.allStuffLoaded) {
+    $('#priority').after('<tr id="throttle"><td></td><td><select id="torrentChannel"></select></td></tr>');
+    $('#torrentChannel').change(function(){mobile.changeChannel()});
+    var throttleHTML = '<option value="-1">' + theUILang.mnuUnlimited + '</option>';
+    $.each(theWebUI.throttles, function(i, v) {
+      throttleHTML += '<option value="' + i + '">' + v.name + '</option>';
+    });
+    $('#torrentChannel').html(throttleHTML);
+  
+    rTorrentStub.prototype.setthrottle = function()
+    {
+      for(var i=0; i<this.vs.length; i++)
+      {
+        var status = theWebUI.getStatusIcon(mobile.torrents[this.hashes[i]]);
+        var needRestart = (status[1]==theUILang.Seeding) || (status[1]==theUILang.Downloading);
+        var name = (this.vs[i]>=0) ? "thr_"+this.vs[i] : "";
+        if(needRestart)
+        {
+          cmd = new rXMLRPCCommand('d.stop');
+          cmd.addParameter("string",this.hashes[i]);
+          this.commands.push( cmd );
+        }
+        cmd = new rXMLRPCCommand('d.set_throttle_name');
+        cmd.addParameter("string",this.hashes[i]);
+        cmd.addParameter("string",name);
+        this.commands.push( cmd );
+        if(needRestart)
+        {
+          cmd = new rXMLRPCCommand('d.start');
+          cmd.addParameter("string",this.hashes[i]);
+          this.commands.push( cmd );
+        }
+      }
+    }
+  } else {
+    setTimeout(function(){plugin.loadThrottle()}, 1000);
+  }
+};
+
 plugin.update = function() {
   theWebUI.requestWithTimeout("?list=1&getmsg=1",
   function(data) {
@@ -1075,75 +1164,12 @@ if (start) {
         
         if (thePlugins.isInstalled('throttle')) {
           plugin.throttleLoaded = true;
-          
-          $('#priority').after('<tr id="throttle"><td></td><td><select id="torrentChannel"></select></td></tr>');
-          $('#torrentChannel').change(function(){mobile.changeChannel()});
-          
-          rTorrentStub.prototype.setthrottle = function()
-          {
-            for(var i=0; i<this.vs.length; i++)
-            {
-              var status = theWebUI.getStatusIcon(mobile.torrents[this.hashes[i]]);
-              var needRestart = (status[1]==theUILang.Seeding) || (status[1]==theUILang.Downloading);
-              var name = (this.vs[i]>=0) ? "thr_"+this.vs[i] : "";
-              if(needRestart)
-              {
-                cmd = new rXMLRPCCommand('d.stop');
-                cmd.addParameter("string",this.hashes[i]);
-                this.commands.push( cmd );
-              }
-              cmd = new rXMLRPCCommand('d.set_throttle_name');
-              cmd.addParameter("string",this.hashes[i]);
-              cmd.addParameter("string",name);
-              this.commands.push( cmd );
-              if(needRestart)
-              {
-                cmd = new rXMLRPCCommand('d.start');
-                cmd.addParameter("string",this.hashes[i]);
-                this.commands.push( cmd );
-              }
-            }
-          }
+          plugin.loadThrottle();
         }
         
         if (thePlugins.isInstalled('ratio')) {
           plugin.ratioGroupsLoaded = true;
-          
-          $('#priority').after('<tr id="ratiogrp"><td></td><td><select id="torrentRatioGrp"></select></td></tr>');
-          $('#torrentRatioGrp').change(function(){mobile.changeRatioGrp()});
-          
-          rTorrentStub.prototype.setratio = function()
-          {
-            for(var i=0; i<this.vs.length; i++)
-            {
-              var wasNo = plugin.getRatioData(this.hashes[i]);
-              if(wasNo!=this.vs[i])
-              {
-                if(wasNo>=0)
-                {
-                  cmd = new rXMLRPCCommand('view.set_not_visible');
-                  cmd.addParameter("string",this.hashes[i]);
-                  cmd.addParameter("string","rat_"+wasNo);
-                  this.commands.push( cmd );
-                  cmd = new rXMLRPCCommand('d.views.remove');
-                  cmd.addParameter("string",this.hashes[i]);
-                  cmd.addParameter("string","rat_"+wasNo);
-                  this.commands.push( cmd );
-                }
-                if(this.vs[i]>=0)
-                {
-                  cmd = new rXMLRPCCommand('d.views.push_back_unique');
-                  cmd.addParameter("string",this.hashes[i]);
-                  cmd.addParameter("string","rat_"+this.vs[i]);
-                  this.commands.push( cmd );
-                  cmd = new rXMLRPCCommand('view.set_visible');
-                  cmd.addParameter("string",this.hashes[i]);
-                  cmd.addParameter("string","rat_"+this.vs[i]);
-                  this.commands.push( cmd );
-                }
-              }
-            }
-          }
+          plugin.loadRatio();
         }
 
         if (thePlugins.isInstalled('_getdir')) {
@@ -1188,22 +1214,6 @@ plugin.onLangLoaded = function() {
 
   $('#deleteOk').text(theUILang.ok);
   $('#deleteCancel').text(theUILang.Cancel);
-  
-  if (this.throttleLoaded) {
-    var throttleHTML = '<option value="-1">' + theUILang.mnuUnlimited + '</option>'
-    $.each(theWebUI.throttles, function(i, v) {
-      throttleHTML += '<option value="' + i + '">' + v.name + '</option>';
-    });
-    $('#torrentChannel').html(throttleHTML);
-  }
-  
-  if (this.ratioGroupsLoaded) {
-    var ratioHTML = '<option value="-1">' + theUILang.mnuRatioUnlimited + '</option>'
-    $.each(theWebUI.ratios, function(i, v) {
-      ratioHTML += '<option value="' + i + '">' + v.name + '</option>';
-    });
-    $('#torrentRatioGrp').html(ratioHTML);
-  }
 };
 
 /**
