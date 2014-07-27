@@ -111,6 +111,9 @@ h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, 
 #detailsFilesPage .glyphicon-file, #detailsFilesPage .glyphicon-folder-open {
   margin-left: -14px;
 }
+#confimTorrentDelete #confirmText {
+  word-break: normal;
+}
 select {
   width:auto;
 }

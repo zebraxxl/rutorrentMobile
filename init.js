@@ -693,7 +693,7 @@ plugin.delete = function() {
       $('#deleteWithData input').prop('checked', this.eraseWithDataDefault);
     }
     if (theWebUI.settings["webui.confirm_when_deleting"]) {
-      $('#confimTorrentDelete h5').text(theUILang.Rem_torrents_prompt + ' ' + this.torrent.name);
+      $('#confimTorrentDelete h5').html('<span id="confirmText">' + theUILang.Rem_torrents_prompt + '</span><hr />' + this.torrent.name);
       this.showPage('confimTorrentDelete');
     } else {
       this.deleteConfimed();
