@@ -1,3 +1,4 @@
+/*** General ***/
 html, body {
   overflow: visible;
 }
@@ -7,6 +8,40 @@ a, button, tr, select, input, label {
 div input {
   margin: 0px;
 }
+select {
+  width:auto;
+}
+.hiddenPath {
+  display: none;
+}
+.table {
+  margin-bottom: 0;
+}
+.icon-white {
+  color: white;
+}
+.icon-black {
+  color: black;
+}
+a:hover, a:focus {
+  color: #428bca;
+  outline: none;
+}
+#mainContainer {
+  background-color: #fff;
+  padding: 39px 3px 51px 3px;
+  margin: 0;
+}
+.progress .progress-bar {
+  white-space: nowrap;
+  text-shadow:1px 1px 3px #000
+}
+h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, .nav a, #getDirList td {
+  word-break:break-all;
+}
+
+
+/*** navbar bottom ***/
 .navbar .nav > li {
   float: left;
   margin-right: 15px;
@@ -40,10 +75,11 @@ div input {
   border-left: 1px solid #111111;
 }
 
-#mainContainer {
+
+/*** navtabs top ***/
+.nav-tabs {
   background-color: #fff;
-  padding: 39px 3px 51px 3px;
-  margin: 0;
+  padding: 3px 3px 0 3px;
 }
 #torrentsList .nav {
   white-space: nowrap;
@@ -60,9 +96,24 @@ div input {
   display: inline;
   top: 9px;
 }
-#torrentDetails #torrentDetailsHeader {
+.nav-tabs .open .dropdown-toggle {
+  color: #fff !important;
+  background-color: #999 !important;
+  border-color: #999 !important;
+}
+.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+
+/*** Torrent Details ***/
+#torrentDetailsHeader, #detailsTrackersPage, #detailsFilesPage {
   padding-left: 8px;
   padding-right: 8px;
+}
+#torrentDetails #detailsDetailsPage tr td:first-child {
+  white-space: nowrap;
 }
 #torrentDetails #detailsDetailsPage #label input {
   display: inline;
@@ -71,86 +122,41 @@ div input {
   padding-top: 5px;
   vertical-align: middle;
 } 
-#torrentDetails #detailsDetailsPage tr td:first-child {
-  white-space: nowrap;
-}
-#detailsFilesPage a {
-  padding: 3px;
-}
-.hiddenPath {
-  display: none;
-}
-.nav-tabs {
-  background-color: #fff;
-  padding: 3px 3px 0 3px;
-}
-.progress .progress-bar {
-  white-space: nowrap;
-  text-shadow:1px 1px 3px #000
-}
-.table {
-  margin-bottom: 0;
-}
-h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, .nav a, #getDirList td {
-  word-break:break-all;
-}
-#detailsFilesPage > div {
-  padding-right: 44px;
-  margin-right: 0 !important;
-}
-#detailsFilesPage div {
-  margin-right: -44px;
-}
-#detailsFilesPage button.btn {
-  margin-right: -44px;
-}
-#detailsFilesPage a {
-  display: inline-block;
-  margin-left: 14px;
-}
-#detailsFilesPage .glyphicon-file, #detailsFilesPage .glyphicon-folder-open {
-  margin-left: -14px;
-}
-#confimTorrentDelete #confirmText {
-  word-break: normal;
-}
-select {
-  width:auto;
-}
-a:focus {
-  outline: none;
-}
-.nav-tabs .open .dropdown-toggle {
-  color: #fff !important;
-  background-color: #999 !important;
-  border-color: #999 !important;
-}
-.nav li.dropdown.open .caret {
-  border-top-color: #fff !important;
-  border-bottom-color: #fff !important;
-}
-.nav-tabs .active .caret {
-  border-top-color: #555 !important;
-  border-bottom-color: #555 !important;
-}
-.nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
-  color: #08c;
-  background-color: transparent;
-  border-color: transparent;
-}
-.nav .dropdown-toggle:hover .caret, .nav .dropdown-toggle:focus .caret {
-  border-top-color: #08c;
-  border-bottom-color: #08c;
-}
+
+
+/*** Add Torrent ***/
 #addTorrent {
   margin-top: -20px;
 }
 #addTorrent #showGetDir {
   height: 34px;
 }
-.icon-white {
-  color: white;
+
+
+/*** Get Dir List ***/
+#getDirList {
+  margin-top: -20px;
 }
-.icon-black {
-  color: black;
+#getDirList h5 {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+#getDirList button {
+  margin-left: 8px;
+  margin-bottom: 15px;
+}
+#getDirList td {
+  padding: 14px;
+}
+
+
+/*** Global Settings ***/
+#globalSettings {
+  margin-top: -20px;
+}
+
+
+/*** Confirm Delete ***/
+#confimTorrentDelete #confirmText {
+  word-break: normal;
 }

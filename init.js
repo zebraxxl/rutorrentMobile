@@ -735,12 +735,12 @@ plugin.drawGetDir = function(path, first) {
 
       while ((match = re.exec(data)) != null) {
         if (match[2] == '.') {
-          html = '<h5 style="padding:8px;">' + decodeURIComponent(match[1]) + '</h5>' +
-          '<button class="btn btn-default" style="margin-bottom: 15px; margin-left: 10px;" onclick="mobile.chooseGetDir(\'' + decodeURIComponent(match[1]) + '\');">' + theUILang.ok + '</button>' +
+          html = '<h5>' + decodeURIComponent(match[1]) + '</h5>' +
+          '<button class="btn btn-default" onclick="mobile.chooseGetDir(\'' + decodeURIComponent(match[1]) + '\');">' + theUILang.ok + '</button>' +
           html;
         } else {
           html += '<tr onclick="mobile.drawGetDir(\'' + decodeURIComponent(match[1]) + '\');">' +
-          '<td style="padding:14px;"><i class="glyphicon glyphicon-folder-open icon-black"></i> ' + match[2] + '</td></tr>';
+          '<td><i class="glyphicon glyphicon-folder-open icon-black"></i> ' + match[2] + '</td></tr>';
         }
       }
 
@@ -934,8 +934,8 @@ plugin.update = function() {
       listHtml +=
       '<tr id="' + n + '" class="torrentBlock status' + statusClass + ' state' + stateClass + ' error' + errorClass + ' label' + plugin.labelIds[v.label] + '" onclick="mobile.showDetails(this.id);"><td>' +
       '<h5>' + v.name + '</h5>' + status[1] + ((v.ul) ? ' ↑' + theConverter.speed(v.ul) : '') + ((v.dl) ? ' ↓' + theConverter.speed(v.dl) : '') +
-      '<div class="progress progress-striped' + ((v.done == 1000) ? '' : ' active') + '">' +
-      '<div class="progress-bar" style="width: ' + percent + '%;">' + percent + '% of ' + theConverter.bytes(v.size,2) + '</div>' +
+      '<div class="progress' + ((v.done == 1000) ? '' : ' active') + '">' +
+      '<div class="progress-bar progress-bar-striped" style="width: ' + percent + '%;">' + percent + '% of ' + theConverter.bytes(v.size,2) + '</div>' +
       '</div>' +
       '</td></tr>';
 
@@ -1177,7 +1177,7 @@ if (start) {
       if (thePlugins.isInstalled('erasedata')) {
         $('#confimTorrentDelete h5').after(
           '<div class="checkbox"><label" id="deleteWithData">' +
-          '<input type="checkbox" style="float: none;"> ' + theUILang.Delete_data + '</label></div>');
+          '<input type="checkbox"> ' + theUILang.Delete_data + '</label></div>');
 
           plugin.eraseWithDataLoaded = true;
         }
