@@ -565,7 +565,7 @@ plugin.drawFiles = function(p) {
       '<tr><td>' + theUILang.Size + '</td><td>' + theConverter.bytes(dir.container[name].size) + '</td></tr>' +
       '</tbody></table></div>';
     }
-    filesHtml += '<br><select class="prioritySelect" style="display:none;">' +
+    filesHtml += '<select class="prioritySelect" style="display:none;">' +
     '<option disabled ' + ((dir.container[name].priority == -1) ? 'selected' : '') + '></option>' +
     '<option value="2" ' + ((dir.container[name].priority == 2) ? 'selected' : '') + '>' + theUILang.High_priority + '</option>' +
     '<option value="1" ' + ((dir.container[name].priority == 1) ? 'selected' : '') + '>' + theUILang.Normal_priority + '</option>' +

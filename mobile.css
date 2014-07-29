@@ -26,6 +26,7 @@ select {
 a:hover, a:focus {
   color: #428bca;
   outline: none;
+  text-decoration: none;
 }
 #mainContainer {
   background-color: #fff;
@@ -121,7 +122,14 @@ h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, 
   width: 140px;
   padding-top: 5px;
   vertical-align: middle;
-} 
+}
+#torrentDetails #detailsFilesPage > div {
+  min-height: 24px;
+}
+#torrentDetails #detailsFilesPage > div a {
+  display: block;
+  padding-top: 4px;
+}
 
 
 /*** Add Torrent ***/
