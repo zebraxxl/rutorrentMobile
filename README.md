@@ -8,8 +8,8 @@ git clone https://github.com/xombiemp/rutorrentMobile.git mobile
 
 ```
 
-Note: It is important that the plugin directory is named 'mobile' so that the supporting files are loaded correctly.
-Warning: This plugin is not compatible with the ipad plugin.
+> **Note:** It is important that the plugin directory is named 'mobile' so that the supporting files are loaded correctly.  
+> **Warning:** This plugin is not compatible with the ipad plugin.
 
 Optional plugins that add additional functionality:
 * _getdir: Allows you to browse directories from your server when adding a torrent.
@@ -32,3 +32,9 @@ If in rutorrent you turned off 'Confirm when deleting torrents', this plugin wil
 
 ### Utilization
 If you set plugin.enableAutodetect to true, the plugin will automaticaly load when detecting a mobile device. To force load the plugin in a desktop browser add '?mobile=1' to the end of the rutorrent url.
+
+### Troubleshooting
+If you are experiencing problems with this plugin, for example it's not scrolling or there are overlapping elements, try these solutions.
+* Make sure the plugin directory is named 'mobile' or else it won't load the plugin specific css file called mobile.css
+* Make sure you don't have the ipad plugin installed. The ipad plugin will make it so you can scroll in the mobile plugin.
+* If you are still having issues, submit an issue and be sure to include as much detail as possible including: mobile device and OS and browser, server OS and webserver.
