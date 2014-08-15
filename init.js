@@ -972,7 +972,9 @@ plugin.update = function() {
             plugin.updateTrackerDropdown();
           }
 
+          listHtml += '</tbody></table>';
           $('#torrentsList #list').html(listHtml);
+
           $.each(trackersMap, function(id, ns) {
             $.each(ns, function(i, n) {
               $('#'+id).addClass("tracker"+plugin.trackerIds[n]);
@@ -1003,7 +1005,6 @@ plugin.update = function() {
         }
       });
     });
-    listHtml += '</tbody></table>';
   },
 
   function()
