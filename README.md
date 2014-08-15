@@ -19,7 +19,7 @@ Optional plugins that add additional functionality:
 * throttle: Allows you to see and set the channel for a torrent.
 
 ### Configuration
-There are three configurable boolean options that you may set at the top of init.js.
+There are three configurable boolean options and one multi-value option that you may set at the top of init.js.
 #### plugin.enableAutodetect
 true by default. This option sets whether mobile devices will be autodetected to enable the plugin.
 
@@ -27,8 +27,12 @@ true by default. This option sets whether mobile devices will be autodetected to
 true by default. This option sets whether to include tablets in the autodetection.
 
 #### plugin.eraseWithDataDefault
-false by default. This option sets the default state of the delete with data checkbox in the confirmation page when deleting a torrent.
+false by default. This option sets the default state of the delete with data checkbox in the confirmation page when deleting a torrent.  
 If in rutorrent you turned off 'Confirm when deleting torrents', this plugin will not display the confirmaion page either. In this case, the decision about deleting data will be determined by the value of this option.
+
+#### plugin.sort
+'name' by default. Possible values: 'name', '-name', 'size', '-size', 'uploaded', '-uploaded', 'downloaded', '-downloaded', 'done', '-done', 'eta', '-eta', 'ul', '-ul', 'dl', '-dl', 'ratio', '-ratio'.  
+This option sets the default sort value of the torrent list. Without negative it's ascending, with negative it's descending.
 
 ### Utilization
 If you set plugin.enableAutodetect to true, the plugin will automaticaly load when detecting a mobile device. To force load the plugin in a desktop browser add '?mobile=1' to the end of the rutorrent url.

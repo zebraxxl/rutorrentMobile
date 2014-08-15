@@ -2,6 +2,7 @@
 plugin.enableAutodetect = true;
 plugin.tabletsDetect = true;
 plugin.eraseWithDataDefault = false;
+plugin.sort = 'name';
 /*** End Configurable Options ***/
 
 plugin.statusFilter = {downloading: 1, completed: 2, label: 4, all: 3, tracker: 5, active: 6, inactive: 7, error: 8};
@@ -23,6 +24,7 @@ var pageToHash = {
   'torrentsList': '',
   'torrentDetails': 'details',
   'globalSettings': 'settings',
+  'torrentSort': 'sort',
   'addTorrent': 'add',
   'confimTorrentDelete': 'delete',
   'getDirList': 'filesystem'
@@ -113,6 +115,8 @@ plugin.backListener = function() {
       this.showSettings();
     } else if (window.location.hash == '#add') {
       this.addTorrent();
+    } else if (window.location.hash == '#sort') {
+      this.showSort();
     } else if (window.location.hash == '#delete') {
       if (this.torrent != undefined) {
         this.delete();
@@ -196,7 +200,7 @@ plugin.filter = function(f, self, l) {
     $('#torrentsList ul li').removeClass('active');
     $('#torrentsLabels').addClass('active');
     var totalWidth = $('#torrentsList .nav').width();
-    var combinedWidth = $('#torrentsStatus').outerWidth(true) + $('#torrentsTrackers').outerWidth(true);
+    var combinedWidth = $('#torrentsStatus').outerWidth(true) + $('#torrentsTrackers').outerWidth(true) + $('#sort').outerWidth(true);
     var selfWidth = $('#torrentsLabels').width();
     var selfExcess = $('#torrentsLabels').outerWidth(true) - selfWidth;
     var diffWidth = totalWidth - combinedWidth - selfExcess;
@@ -215,7 +219,7 @@ plugin.filter = function(f, self, l) {
     $('#torrentsList ul li').removeClass('active');
     $('#torrentsTrackers').addClass('active');
     var totalWidth = $('#torrentsList .nav').width();
-    var combinedWidth = $('#torrentsStatus').outerWidth(true) + $('#torrentsLabels').outerWidth(true);
+    var combinedWidth = $('#torrentsStatus').outerWidth(true) + $('#torrentsLabels').outerWidth(true) + $('#sort').outerWidth(true);
     var selfWidth = $('#torrentsTrackers').width();
     var selfExcess = $('#torrentsTrackers').outerWidth(true) - selfWidth;
     var diffWidth = totalWidth - combinedWidth - selfExcess;
@@ -289,12 +293,56 @@ plugin.showSettings = function() {
   });
 };
 
+plugin.showSort = function() {
+  $('#sortOption option').prop('selected', false);
+  $('#sort_asc').prop('checked', false);
+  $('#sort_desc').prop('checked', false);
+  
+  var sort = '';
+  if(plugin.sort[0] === "-") {
+    sort = plugin.sort.substr(1);
+    $('#sort_desc').prop('checked', true);
+  } else {
+    sort = plugin.sort;
+    $('#sort_asc').prop('checked', true);
+  }
+  
+  sortHtml = '<option value="name">' + theUILang.Name + '</option>' +
+              '<option value="size">' + theUILang.Size + '</option>' +
+              '<option value="uploaded">' + theUILang.Uploaded + '</option>' +
+              '<option value="downloaded">' + theUILang.Downloaded + '</option>' +
+              '<option value="done">' + theUILang.Done + '</option>' +
+              '<option value="eta">' + theUILang.ETA + '</option>' +
+              '<option value="ul">' + theUILang.Ul_speed + '</option>' +
+              '<option value="dl">' + theUILang.Down_speed + '</option>' +
+              '<option value="ratio">' + theUILang.Ratio + '</option>';
+  
+  if (this.seedingtimeLoaded) {
+    sortHtml += '<option value="addtime">' + theUILang.Added + '</option>' +
+                '<option value="seedingtime">' + theUILang.seedingTime + '</option>'
+  }
+  $('#sortOption').html(sortHtml);
+  $('#sortOption option[value=' + sort + ']').prop('selected', true);
+  
+  plugin.showPage('torrentSort');
+};
+
 plugin.setDLLimit = function() {
   theWebUI.setDLRate($('#dlLimit').val());
 };
 
 plugin.setULLimit = function() {
   theWebUI.setULRate($('#ulLimit').val());
+};
+
+plugin.setSort = function() {
+  var sort = $('#sortOption').val();
+  if($('#sort_desc').prop('checked')) {
+    sort = '-' + sort
+  }
+  plugin.sort = sort;
+  plugin.update(true);
+  history.go(-1);
 };
 
 plugin.addTorrent = function() {
@@ -889,7 +937,33 @@ plugin.loadSeedingTime = function () {
   }
 };
 
-plugin.update = function() {
+plugin.dynamicSort = function (property) {
+  var sortOrder = 1;
+  if(property[0] === "-") {
+    sortOrder = -1;
+    property = property.substr(1);
+  }
+  return function (a,b) {
+    if (typeof a[property] == 'string' || a[property] instanceof String) {
+      if (parseInt(a[property])) {
+        if (parseInt(b[property])) {
+          var result = (parseInt(a[property]) < parseInt(b[property])) ? -1 : (parseInt(a[property]) > parseInt(b[property])) ? 1 : 0;
+        } else {
+          var result = -1;
+        }
+      } else if (parseInt(b[property])) {
+        var result = 1;
+      } else {
+        var result = (a[property].toLowerCase() < b[property].toLowerCase()) ? -1 : (a[property].toLowerCase() > b[property].toLowerCase()) ? 1 : 0;
+      }
+    } else {
+      var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+    }
+    return result * sortOrder;
+  }
+}
+
+plugin.update = function(singleUpdate) {
   theWebUI.requestWithTimeout("?list=1&getmsg=1",
   function(data) {
     plugin.torrents = data.torrents;
@@ -897,6 +971,7 @@ plugin.update = function() {
     plugin.labelIds = {};
     plugin.trackerIds = {};
     plugin.labelIds[''] = 0;
+    var torrentArray = [];
     var trackersCount = {};
     var trackersMap = {};
     var count = Object.keys(plugin.torrents).length;
@@ -921,27 +996,32 @@ plugin.update = function() {
 
     var listHtml = '<table class="table table table-striped"><tbody>';
 
-    $.each(data.torrents, function(n, v){
+    $.each(plugin.torrents, function(n, v){
+      v.hash = n;
+      torrentArray.push(v);
+    });
+    torrentArray.sort(plugin.dynamicSort(plugin.sort));
+
+    $.each(torrentArray, function(n, v){
       var status = theWebUI.getStatusIcon(v);
       var statusClass = (v.done == 1000) ? 'Completed' : 'Downloading';
       var stateClass = (v.ul || v.dl) ? 'Active' : 'Inactive';
       var errorClass = (v.state & dStatus.error) ? 'Yes' : 'No';
       var percent = v.done / 10;
 
-      v.hash = n;
       tul += iv(v.ul);
       tdl += iv(v.dl);
 
       listHtml +=
-      '<tr id="' + n + '" class="torrentBlock status' + statusClass + ' state' + stateClass + ' error' + errorClass + ' label' + plugin.labelIds[v.label] + '" onclick="mobile.showDetails(this.id);"><td>' +
+      '<tr id="' + v.hash + '" class="torrentBlock status' + statusClass + ' state' + stateClass + ' error' + errorClass + ' label' + plugin.labelIds[v.label] + '" onclick="mobile.showDetails(this.id);"><td>' +
       '<h5>' + v.name + '</h5>' + status[1] + ((v.ul) ? ' ↑' + theConverter.speed(v.ul) : '') + ((v.dl) ? ' ↓' + theConverter.speed(v.dl) : '') +
       '<div class="progress' + ((v.done == 1000) ? '' : ' active') + '">' +
       '<div class="progress-bar progress-bar-striped" style="width: ' + percent + '%;">' + percent + '% of ' + theConverter.bytes(v.size,2) + '</div>' +
       '</div>' +
       '</td></tr>';
 
-      mobile.request('?action=gettrackers&hash=' + n, function(data) {
-        var trackers = data[n];
+      mobile.request('?action=gettrackers&hash=' + v.hash, function(data) {
+        var trackers = data[v.hash];
         var uniqueTrackers = [];
         for (var i = 0; i < trackers.length; i++) {
           var trackerName = theWebUI.getTrackerName(trackers[i].name);
@@ -961,7 +1041,7 @@ plugin.update = function() {
             }
           }
         }
-        trackersMap[n] = uniqueTrackers;
+        trackersMap[v.hash] = uniqueTrackers;
         count--;
         if(count == 0) {
           Object.keys(trackersCount).sort().forEach(function(t) {
@@ -1000,8 +1080,10 @@ plugin.update = function() {
 
           $('#upspeed').text(theConverter.speed(tul));
           $('#downspeed').text(theConverter.speed(tdl));
-
-          setTimeout(function() {mobile.update();}, theWebUI.settings['webui.update_interval']);
+          
+          if (!singleUpdate) {
+            setTimeout(function() {mobile.update();}, theWebUI.settings['webui.update_interval']);
+          }
         }
       });
     });
@@ -1057,6 +1139,7 @@ if (start) {
       $('body').html(data);
 
       $('link[rel=stylesheet]').remove();
+      plugin.loadLang();
       plugin.loadCSS('css/bootstrap.min');
       plugin.loadMainCSS();
       $('head').append('<meta name="apple-mobile-web-app-capable" content="yes" />');
@@ -1201,7 +1284,6 @@ if (start) {
           plugin.seedingtimeLoaded = true;
           plugin.loadSeedingTime();
         }
-        plugin.onLangLoaded();
         plugin.update();
       }
     });
@@ -1233,6 +1315,12 @@ plugin.onLangLoaded = function() {
 
   $('#deleteOk').text(theUILang.ok);
   $('#deleteCancel').text(theUILang.Cancel);
+  
+  $('#sortAsc').append(' ' + theUILang.acs);
+  $('#sortDesc').append(' ' + theUILang.decs);
+  $('#sortOption').parent().children('label').children('h5').text(theUILang.SortTorrents);
+  $('#sortOk').text(theUILang.ok);
+  $('#sortCancel').text(theUILang.Cancel);
 };
 
 /**

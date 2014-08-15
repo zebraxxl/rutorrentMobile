@@ -70,6 +70,9 @@
         <a href="javascript://void();" class="dropdown-toggle" data-toggle="dropdown"><span></span><b class="caret"></b></a>
         <ul class="dropdown-menu pull-right"></ul>
       </li>
+      <li id="sort">
+        <a id="sortIcon" href="javascript://void();" onclick="mobile.showSort();"><i class="glyphicon glyphicon-sort icon-black"></i></a>
+      </li>
     </ul>
     <div id="list"></div>
   </div>
@@ -115,6 +118,19 @@
     </table>
     <div class="detailsPage" id="detailsTrackersPage"></div>
     <div class="detailsPage" id="detailsFilesPage"></div>
+  </div>
+  
+  <div class="mainContainer container" id="torrentSort" style="display:none;">
+    <div class="form-group">
+      <label class="select" for="sortOption"><h5></h5></label>
+      <select id="sortOption" class="form-control"></select>
+      <div class="radio">
+        <label id="sortAsc" class="radio-inline"><input type="radio" name="inlineRadioOptions" id="sort_asc" value=""><i class="glyphicon glyphicon-sort-by-attributes icon-black"></i></label>
+        <label id="sortDesc" class="radio-inline"><input type="radio" name="inlineRadioOptions" id="sort_desc" value="-"><i class="glyphicon glyphicon-sort-by-attributes-alt icon-black"></i></label>
+      </div>
+    </div>
+    <button id="sortOk" onclick="mobile.setSort();" class="btn btn-primary"></button>
+    <button id="sortCancel" onclick="history.go(-1);" class="btn btn-default"></button>
   </div>
   
   <div class="mainContainer container" id="globalSettings" style="display:none;">
