@@ -80,7 +80,7 @@ if(!$type(theWebUI.getTrackerName))
   }
 }
 
-$(document).on('blur', 'input, textarea', function() {
+$(document).on('blur', 'input, select, textarea', function() {
   setTimeout(function() {
     $(window).scrollTop($(window).scrollTop()+1);
   }, 0);
