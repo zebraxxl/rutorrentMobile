@@ -128,7 +128,7 @@ h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, 
 #torrentDetails #detailsDetailsPage #label input {
   display: inline;
   height: 24px;
-  width: 140px;
+  width: 139px;
   padding-top: 5px;
   vertical-align: middle;
 }
