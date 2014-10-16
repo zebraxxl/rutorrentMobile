@@ -119,6 +119,7 @@ h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, 
 
 /*** Torrent Details ***/
 #torrentDetailsHeader, #detailsTrackersPage, #detailsFilesPage {
+  padding-top: 9px;
   padding-left: 8px;
   padding-right: 8px;
 }
@@ -138,6 +139,9 @@ h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, 
 #torrentDetails #detailsFilesPage > div a {
   display: block;
   padding-top: 4px;
+}
+#torrentDetails #detailsFilesPage button {
+  margin-left: 4px;
 }
 
 
