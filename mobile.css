@@ -16,3 +16,7 @@ html, body {
 .hiddenPath {
 	display: none;
 }
+
+.table-striped{
+	table-layout:fixed;
+}
