@@ -656,6 +656,7 @@ plugin.init = function() {
 
 				$('link[rel=stylesheet]').remove();
 				plugin.loadCSS('css/bootstrap.min');
+				plugin.loadCSS('mobile');
 				plugin.loadMainCSS();
 				if (plugin.bootstrapJS)
 					injectScript(plugin.path+'js/bootstrap.min.js');
