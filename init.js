@@ -1109,6 +1109,70 @@ if ((!start) && this.enableAutodetect) {
 }
 
 if (start) {
+dxSTable.prototype.renameColumn = function(no,name) {}
+
+dxSTable.prototype.Sort = function(e) {}
+
+dxSTable.prototype.createRow = function(cols, sId, icon, attr) 
+{
+	if(!$type(attr)) 
+		attr = [];
+	var tr = $("<tr>").attr( { index: this.rows, title: cols[0] });
+	if(sId != null) 
+		tr.attr("id",sId);
+	var self = this;
+	if(this.colorEvenRows) 
+		tr.addClass( (this.rows & 1) ? "odd" : "even" );
+
+	tr.mouseclick( function(e) { return(self.selectRow(e, this)); });
+
+	if($type(this.ondblclick) == "function") 
+		tr.dblclick( function(e) { return(self.ondblclick(this)); });
+
+	for(var k in attr) 
+		tr.attr(k, attr[k]);
+	var data = this.rowdata[sId].fmtdata;
+	var s = "";
+	var div;
+	var ret;
+	for(var i = 0; i < this.cols; i++) 
+	{
+		var ind = this.colOrder[i];
+		s+="<td class='stable-"+this.dCont.id+"-col-"+ind+"'";
+		var span1 = "";
+		var span2 = "";
+		if(this.colsdata[i].type==TYPE_PROGRESS)
+		{
+			s+=" rawvalue='"+($type(cols[ind]) ? cols[ind] : "")+"'";
+		        span1 = "<span class='meter-text' style='overflow: visible'>"+escapeHTML(data[ind])+"</span>";
+			div = "<div class='meter-value' style='float: left; background-color: "+
+		 		(new RGBackground()).setGradient(this.prgStartColor,this.prgEndColor,parseFloat(data[ind])).getColor()+
+				"; width: "+iv(data[ind])+"%"+
+				"; visibility: "+(iv(data[ind]) ? "visible" : "hidden")+
+				"'>&nbsp;</div>";
+		}
+		else
+			div = "<div>"+((String(data[ind]) == "") ? "&nbsp;" : escapeHTML(data[ind]))+"</div>";
+		if((ind == 0) && (icon != null)) 
+			span2 = "<span class='stable-icon "+icon+"'></span>";
+		if(!this.colsdata[i].enabled && !browser.isIE7x)
+			s+=" style='display: none'";
+		s+=">";
+		s+=span1;
+		s+=span2;
+		s+=div;
+		s+="</td>";
+	}
+	ret = tr.append(s).get(0);
+	//if(!browser.isIE7x)
+	//{
+	//	var _e = this.tBody.getElementsByTagName("colgroup")[0].getElementsByTagName("col");
+	//	for(var i = 0, l = _e.length; i < l; i++) 
+	//		ret.cells[i].style.textAlign = this.tHeadCols[i].style.textAlign;
+	//}
+	return(ret);
+}
+
   $.each(thePlugins.list, function(i, v) {
     if (v.name != 'rpc' && v.name != 'httprpc' && v.name != '_getdir' && v.name != 'throttle' && v.name != 'ratio' && v.name != 'erasedata' && v.name != 'seedingtime' && v.name != 'mobile') {
       v.disable();
