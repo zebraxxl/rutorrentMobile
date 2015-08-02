@@ -1274,6 +1274,7 @@ dxSTable.prototype.createRow = function(cols, sId, icon, attr)
       $('#notAddPath').append(' ' + theUILang.Dont_add_tname);
       $('#startStopped').append(' ' + theUILang.Dnt_start_down_auto);
       $('#fastResume').append(' ' + theUILang.doFastResume);
+      $('#randomizeHash').append(' ' + theUILang.doRandomizeHash);
       $('#torrentFileSend').text(theUILang.add_button);
 
       $('#torrentPriority').html(
@@ -1295,6 +1296,9 @@ dxSTable.prototype.createRow = function(cols, sId, icon, attr)
         }
         if($("#not_add_path").prop("checked")) {
           s += 'not_add_path=1&';
+        }
+        if($("#randomize_hash").prop("checked")) {
+          s += 'randomize_hash=1&';
         }
         var dir = $.trim($("#dir_edit").val());
         if(dir.length) {
