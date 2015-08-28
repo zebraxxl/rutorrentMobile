@@ -200,7 +200,7 @@ plugin.filter = function(f, self, l) {
     $('#torrentsList ul li').removeClass('active');
     $('#torrentsLabels').addClass('active');
     var totalWidth = $('#torrentsList .nav').width();
-    var combinedWidth = $('#torrentsStatus').outerWidth(true) + $('#torrentsTrackers').outerWidth(true) + $('#sort').outerWidth(true);
+    var combinedWidth = $('#torrentsStatus').outerWidth(true) + $('#torrentsTrackers').outerWidth(true) + $('#sort').outerWidth(true) + 1;
     var selfWidth = $('#torrentsLabels').width();
     var selfExcess = $('#torrentsLabels').outerWidth(true) - selfWidth;
     var diffWidth = totalWidth - combinedWidth - selfExcess;
@@ -219,7 +219,7 @@ plugin.filter = function(f, self, l) {
     $('#torrentsList ul li').removeClass('active');
     $('#torrentsTrackers').addClass('active');
     var totalWidth = $('#torrentsList .nav').width();
-    var combinedWidth = $('#torrentsStatus').outerWidth(true) + $('#torrentsLabels').outerWidth(true) + $('#sort').outerWidth(true);
+    var combinedWidth = $('#torrentsStatus').outerWidth(true) + $('#torrentsLabels').outerWidth(true) + $('#sort').outerWidth(true) + 1;
     var selfWidth = $('#torrentsTrackers').width();
     var selfExcess = $('#torrentsTrackers').outerWidth(true) - selfWidth;
     var diffWidth = totalWidth - combinedWidth - selfExcess;
