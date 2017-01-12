@@ -1,3 +1,13 @@
-﻿theUILang.Choose = 'Choose';
-theUILang.areYouShure = 'Do you really want to remove torrent';
-mobile.onLangLoaded();
+/*
+ * PLUGIN MOBILE
+ *
+ * Polish language file.
+ *
+ * Author: 
+ */
+
+ theUILang.SortTorrents    = "Sort torrents by";
+ theUILang.acs             = "Ascending";
+ theUILang.decs            = "Descending";
+
+thePlugins.get("mobile").langLoaded();

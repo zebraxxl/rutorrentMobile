@@ -1,3 +1,13 @@
-﻿theUILang.Choose = 'Επιλογή';
-theUILang.areYouShure = 'Θέλετε πραγματικά να αφαιρέσετε το torrent';
-mobile.onLangLoaded();
+/*
+ * PLUGIN MOBILE
+ *
+ * Greek language file.
+ *
+ * Author: 
+ */
+
+ theUILang.SortTorrents    = "Sort torrents by";
+ theUILang.acs             = "Ascending";
+ theUILang.decs            = "Descending";
+
+thePlugins.get("mobile").langLoaded();
