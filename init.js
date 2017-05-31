@@ -1002,25 +1002,25 @@ plugin.update = function(singleUpdate) {
     });
     torrentArray.sort(plugin.dynamicSort(plugin.sort));
 
-    $.each(torrentArray, function(n, v){
-      var status = theWebUI.getStatusIcon(v);
-      var statusClass = (v.done == 1000) ? 'Completed' : 'Downloading';
-      var stateClass = (v.ul || v.dl) ? 'Active' : 'Inactive';
-      var errorClass = (v.state & dStatus.error) ? 'Yes' : 'No';
-      var percent = v.done / 10;
+    mobile.request('?action=getalltrackers', function(data) {
+      $.each(torrentArray, function(n, v){
+        var status = theWebUI.getStatusIcon(v);
+        var statusClass = (v.done == 1000) ? 'Completed' : 'Downloading';
+        var stateClass = (v.ul || v.dl) ? 'Active' : 'Inactive';
+        var errorClass = (v.state & dStatus.error) ? 'Yes' : 'No';
+        var percent = v.done / 10;
 
-      tul += iv(v.ul);
-      tdl += iv(v.dl);
+        tul += iv(v.ul);
+        tdl += iv(v.dl);
 
-      listHtml +=
-      '<tr id="' + v.hash + '" class="torrentBlock status' + statusClass + ' state' + stateClass + ' error' + errorClass + ' label' + plugin.labelIds[v.label] + '" onclick="mobile.showDetails(this.id);"><td>' +
-      '<h5>' + v.name + '</h5>' + status[1] + ((v.ul) ? ' ↑' + theConverter.speed(v.ul) : '') + ((v.dl) ? ' ↓' + theConverter.speed(v.dl) : '') +
-      '<div class="progress' + ((v.done == 1000) ? '' : ' active') + '">' +
-      '<div class="progress-bar progress-bar-striped" style="width: ' + percent + '%;">' + percent + '% of ' + theConverter.bytes(v.size,2) + '</div>' +
-      '</div>' +
-      '</td></tr>';
+        listHtml +=
+        '<tr id="' + v.hash + '" class="torrentBlock status' + statusClass + ' state' + stateClass + ' error' + errorClass + ' label' + plugin.labelIds[v.label] + '" onclick="mobile.showDetails(this.id);"><td>' +
+        '<h5>' + v.name + '</h5>' + status[1] + ((v.ul) ? ' ↑' + theConverter.speed(v.ul) : '') + ((v.dl) ? ' ↓' + theConverter.speed(v.dl) : '') +
+        '<div class="progress' + ((v.done == 1000) ? '' : ' active') + '">' +
+        '<div class="progress-bar progress-bar-striped" style="width: ' + percent + '%;">' + percent + '% of ' + theConverter.bytes(v.size,2) + '</div>' +
+        '</div>' +
+        '</td></tr>';
 
-      mobile.request('?action=gettrackers&hash=' + v.hash, function(data) {
         var trackers = data[v.hash];
         var uniqueTrackers = [];
         for (var i = 0; i < trackers.length; i++) {
