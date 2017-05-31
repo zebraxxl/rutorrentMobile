@@ -1351,4 +1351,9 @@ if ((plugin.tabletsDetect) && (!jQuery.browser.mobile)) {
 }
 
 mobile = plugin;
-plugin.init();
+plugin.config = theWebUI.config;
+theWebUI.config = function(data)
+{
+	plugin.config.call(this,data);
+	plugin.init();
+}
