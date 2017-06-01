@@ -1101,31 +1101,48 @@ plugin.update = function(singleUpdate) {
 );
 };
 
-plugin.init = function() {
-var start = (window.location.href.indexOf('mobile=1') > 0);
+plugin.disableOthers = function() {
+  var start = (window.location.href.indexOf('mobile=1') > 0);
 
-if ((!start) && this.enableAutodetect) {
-  start = jQuery.browser.mobile;
-}
+  if ((!start) && this.enableAutodetect) {
+    start = jQuery.browser.mobile;
+  }
 
-if (start) {
-dxSTable.prototype.renameColumn = function(no,name) { }
+  if (start) {
+    dxSTable.prototype.renameColumn = function(no,name) { }
 
-dxSTable.prototype.Sort = function(e) { }
+    dxSTable.prototype.Sort = function(e) { }
 
-dxSTable.prototype.createRow = function(cols, sId, icon, attr) { }
+    dxSTable.prototype.createRow = function(cols, sId, icon, attr) { }
 
-dxSTable.prototype.addRow = function (cols, sId, icon, attr) { }
+    dxSTable.prototype.addRow = function (cols, sId, icon, attr) { }
 
-dxSTable.prototype.addRowById = function (ids, sId, icon, attr) { }
+    dxSTable.prototype.addRowById = function (ids, sId, icon, attr) { }
 
-dxSTable.prototype.getAttr = function (row, attrName) { }
+    dxSTable.prototype.refreshRows = function( height, fromScroll ) { }
 
-  $.each(thePlugins.list, function(i, v) {
-    if (v.name != 'rpc' && v.name != 'httprpc' && v.name != '_getdir' && v.name != 'throttle' && v.name != 'ratio' && v.name != 'erasedata' && v.name != 'seedingtime' && v.name != 'mobile') {
-      v.disable();
+    dxSTable.prototype.getAttr = function (row, attrName) { }
+
+    theWebUI.filterByLabel = function() { }
+
+    $.each(thePlugins.list, function(i, v) {
+      if (v.name != 'rpc' && v.name != 'httprpc' && v.name != '_getdir' && v.name != 'throttle' && v.name != 'ratio' && v.name != 'erasedata' && v.name != 'seedingtime' && v.name != 'mobile') {
+        v.disable();
+      }
+    });
+
+    plugin.config = theWebUI.config;
+    theWebUI.config = function(data)
+    {
+    	plugin.config.call(this,data);
+    	plugin.init();
     }
-  });
+  } else {
+    this.disable();
+  }
+};
+
+plugin.init = function() {
 
   this.lastHref = window.location.href;
 
@@ -1302,10 +1319,7 @@ dxSTable.prototype.getAttr = function (row, attrName) { }
         }
         plugin.update();
       }
-    });
-  } else {
-    this.disable();
-  }
+  });
 };
 
 plugin.onLangLoaded = function() {
@@ -1351,9 +1365,4 @@ if ((plugin.tabletsDetect) && (!jQuery.browser.mobile)) {
 }
 
 mobile = plugin;
-plugin.config = theWebUI.config;
-theWebUI.config = function(data)
-{
-	plugin.config.call(this,data);
-	plugin.init();
-}
+plugin.disableOthers();
