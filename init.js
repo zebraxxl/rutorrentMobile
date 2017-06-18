@@ -318,7 +318,7 @@ plugin.showSort = function() {
               '<option value="ratio">' + theUILang.Ratio + '</option>';
   
   if (this.seedingtimeLoaded) {
-    sortHtml += '<option value="addtime">' + theUILang.Added + '</option>' +
+    sortHtml += '<option value="addtime">' + theUILang.addTime + '</option>' +
                 '<option value="seedingtime">' + theUILang.seedingTime + '</option>'
   }
   $('#sortOption').html(sortHtml);
@@ -930,7 +930,7 @@ plugin.loadSeedingTime = function () {
   if (seedingtime.allStuffLoaded) {
     $('#timeElapsed').after('<tr id="seedtime"><td></td><td></td></tr>');
     $('#timeElapsed').after('<tr id="dateAdded"><td></td><td></td></tr>');
-    $('#dateAdded').children('td:first').text(theUILang.Added);
+    $('#dateAdded').children('td:first').text(theUILang.addTime);
     $('#seedtime').children('td:first').text(theUILang.seedingTime);
   } else {
     setTimeout(function(){plugin.loadSeedingTime()}, 1000);
