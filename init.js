@@ -2,7 +2,7 @@
 plugin.enableAutodetect = true;
 plugin.tabletsDetect = true;
 plugin.eraseWithDataDefault = false;
-plugin.sort = 'name'; /* 'name', 'size', 'uploaded', 'downloaded', 'done', 'eta', 'ul', 'dl', 'ratio', 'addtime', 'seedingtime'. Add preceding negative for descending sort. */
+plugin.sort = '-addtime'; /* 'name', 'size', 'uploaded', 'downloaded', 'done', 'eta', 'ul', 'dl', 'ratio', 'addtime', 'seedingtime'. Add preceding negative for descending sort. */
 /*** End Configurable Options ***/
 
 plugin.statusFilter = {downloading: 1, completed: 2, label: 4, all: 3, tracker: 5, active: 6, inactive: 7, error: 8};
@@ -318,7 +318,7 @@ plugin.showSort = function() {
               '<option value="ratio">' + theUILang.Ratio + '</option>';
   
   if (this.seedingtimeLoaded) {
-    sortHtml += '<option value="addtime">' + theUILang.Added + '</option>' +
+    sortHtml += '<option value="addtime">' + theUILang.addTime + '</option>' +
                 '<option value="seedingtime">' + theUILang.seedingTime + '</option>'
   }
   $('#sortOption').html(sortHtml);
@@ -930,7 +930,7 @@ plugin.loadSeedingTime = function () {
   if (seedingtime.allStuffLoaded) {
     $('#timeElapsed').after('<tr id="seedtime"><td></td><td></td></tr>');
     $('#timeElapsed').after('<tr id="dateAdded"><td></td><td></td></tr>');
-    $('#dateAdded').children('td:first').text(theUILang.Added);
+    $('#dateAdded').children('td:first').text(theUILang.addTime);
     $('#seedtime').children('td:first').text(theUILang.seedingTime);
   } else {
     setTimeout(function(){plugin.loadSeedingTime()}, 1000);
