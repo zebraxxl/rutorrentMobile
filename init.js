@@ -1122,6 +1122,10 @@ plugin.disableOthers = function() {
     dxSTable.prototype.refreshRows = function( height, fromScroll ) { }
 
     dxSTable.prototype.getAttr = function (row, attrName) { }
+    
+    dxSTable.prototype.setAttr = function(row, attr) { }
+    
+    dxSTable.prototype.setIcon = function(row, icon) { }
 
     theWebUI.filterByLabel = function() { }
 
