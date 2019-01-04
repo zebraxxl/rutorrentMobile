@@ -126,6 +126,9 @@ h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, 
 #torrentDetails #detailsDetailsPage tr td:first-child {
   white-space: nowrap;
 }
+#torrentDetails #detailsDetailsPage tr td:last-child {
+ word-break: break-all; 
+}
 #torrentDetails #detailsDetailsPage #label input {
   display: inline;
   height: 24px;

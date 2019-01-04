@@ -47,7 +47,9 @@ var detailsIdToLangId = {
   'peers' : 'Peers',
   'label' : 'Label',
   'priority' : 'Priority',
-  'trackerStatus' : 'Track_status'
+  'trackerStatus' : 'Track_status',
+  'created' : 'Created_on',
+  'savePath' : 'Save_path'
 };
 
 if(!$type(theWebUI.getTrackerName))
@@ -395,6 +397,7 @@ plugin.fillDetails = function(d) {
   $('#torrentDetails #size td:last').text(theConverter.bytes(d.size,2));
   $('#torrentDetails #remaining td:last').text(theConverter.bytes(d.remaining,2));
   $('#torrentDetails #timeElapsed td:last').text(theConverter.time(Math.floor((new Date().getTime()-theWebUI.deltaTime)/1000-iv(d.state_changed)),true));
+  $('#torrentDetails #created td:last').text((d.created>3600*24*365) ? theConverter.date(iv(d.created)+theWebUI.deltaTime/1000) : "");
   if (this.seedingtimeLoaded) {
     $('#torrentDetails #seedtime td:last').text((d.seedingtime>3600*24*365) ? theConverter.time(new Date().getTime()/1000-(iv(d.seedingtime)+theWebUI.deltaTime/1000),true) : "");
     $('#torrentDetails #dateAdded td:last').text((d.addtime>3600*24*365) ? theConverter.date(iv(d.addtime)+theWebUI.deltaTime/1000) : "");
@@ -407,6 +410,7 @@ plugin.fillDetails = function(d) {
   $('#torrentDetails #uploadSpeed td:last').text(theConverter.speed(d.ul));
   $('#torrentDetails #seeds td:last').text(d.seeds_actual + " " + theUILang.of + " " + d.seeds_all + " " + theUILang.connected);
   $('#torrentDetails #peers td:last').text(d.peers_actual + " " + theUILang.of + " " + d.peers_all + " " + theUILang.connected);
+  $('#torrentDetails #savePath td:last').text(d.save_path);
   $('#torrentDetails #trackerStatus td:last').text(d.msg);
 };
 
@@ -928,8 +932,8 @@ plugin.loadThrottle = function () {
 plugin.loadSeedingTime = function () {
   var seedingtime = thePlugins.get("seedingtime");
   if (seedingtime.allStuffLoaded) {
-    $('#timeElapsed').after('<tr id="seedtime"><td></td><td></td></tr>');
-    $('#timeElapsed').after('<tr id="dateAdded"><td></td><td></td></tr>');
+    $('#created').after('<tr id="seedtime"><td></td><td></td></tr>');
+    $('#created').after('<tr id="dateAdded"><td></td><td></td></tr>');
     $('#dateAdded').children('td:first').text(theUILang.addTime);
     $('#seedtime').children('td:first').text(theUILang.seedingTime);
   } else {
