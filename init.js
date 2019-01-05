@@ -370,7 +370,7 @@ plugin.fillDetails = function(d) {
     $('#torrentProgress').addClass('active');
   }
   $('#torrentProgress .progress-bar').css('width', percent + '%');
-  $('#torrentProgress .progress-bar').text(percent + '% of ' + theConverter.bytes(d.size,2));
+  $('#torrentProgress .progress-bar').text(percent + '% ' + theUILang.of + ' ' + theConverter.bytes(d.size,2));
 
   $('#torrentDetails #status td:last').text(theWebUI.getStatusIcon(d)[1] + ' ').append('<button class="btn btn-default btn-sm" type="button" onclick="mobile.recheck();"><i class="glyphicon glyphicon-refresh .icon-black"></i></button>');
   $('#torrentPriority option').prop('selected', false);
@@ -1022,7 +1022,7 @@ plugin.update = function(singleUpdate) {
         '<h5>' + v.name + '</h5>' +
         '<span>' + status[1] + ((v.ul) ? ' ↑' + theConverter.speed(v.ul) : '') + ((v.dl) ? ' ↓' + theConverter.speed(v.dl) : '') + ' | ' + ((status[1] == 'Downloading') ? (theUILang.ETA + ' ' + ((v.eta ==- 1) ? "&#8734;" : theConverter.time(v.eta))) : (theUILang.Ratio + ' ' + ((v.ratio ==- 1) ? "&#8734;" : theConverter.round(v.ratio/1000,3)))) + '</span>' +
         '<div class="progress' + ((v.done == 1000) ? '' : ' active') + '">' +
-        '<div class="progress-bar progress-bar-striped" style="width: ' + percent + '%;">' + percent + '% of ' + theConverter.bytes(v.size,2) + '</div>' +
+        '<div class="progress-bar progress-bar-striped" style="width: ' + percent + '%;">' + percent + '% ' + theUILang.of + ' ' + theConverter.bytes(v.size,2) + '</div>' +
         '</div>' +
         '</td></tr>';
 
