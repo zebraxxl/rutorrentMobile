@@ -40,6 +40,9 @@ a:hover, a:focus {
 h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, .nav a, #getDirList td {
   word-break:break-all;
 }
+#torrentsList #list span {
+  font-size: 12px;
+}
 
 
 /*** navbar bottom ***/
