@@ -49,7 +49,8 @@ var detailsIdToLangId = {
   'priority' : 'Priority',
   'trackerStatus' : 'Track_status',
   'created' : 'Created_on',
-  'savePath' : 'Save_path'
+  'savePath' : 'Save_path',
+  'comment' : 'Comment'
 };
 
 if(!$type(theWebUI.getTrackerName))
@@ -411,6 +412,7 @@ plugin.fillDetails = function(d) {
   $('#torrentDetails #seeds td:last').text(d.seeds_actual + " " + theUILang.of + " " + d.seeds_all + " " + theUILang.connected);
   $('#torrentDetails #peers td:last').text(d.peers_actual + " " + theUILang.of + " " + d.peers_all + " " + theUILang.connected);
   $('#torrentDetails #savePath td:last').text(d.save_path);
+  $('#torrentDetails #comment td:last').text(d.comment);
   $('#torrentDetails #trackerStatus td:last').text(d.msg);
 };
 
