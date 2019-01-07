@@ -94,6 +94,9 @@
       <li id="detailsFiles">
         <a href="javascript://void();" onclick="mobile.showFilesInDetails();"></a>
       </li>
+      <li id="detailsPeers">
+        <a href="javascript://void();" onclick="mobile.showPeersInDetails();"></a>
+      </li>
     </ul>
     <table class="table table-striped detailsPage" id="detailsDetailsPage">
       <tbody>
@@ -121,6 +124,27 @@
     </table>
     <div class="detailsPage" id="detailsTrackersPage"></div>
     <div class="detailsPage" id="detailsFilesPage"></div>
+    <div class="detailsPage" id="detailsPeersPage">
+      <div class="table-responsive tableFixHead">
+        <table class="table table-striped table-scroll" id="peersTable">
+          <thead>
+            <tr>
+              <th id="address" scope="col"></th>
+              <th id ="client" scope="col"></th>
+              <th id ="flags" scope="col"></th>
+              <th id = "done" scope="col"></th>
+              <th id = "downloaded" scope="col"></th>
+              <th id = "uploaded" scope="col"></th>
+              <th id = "dl" scope="col"></th>
+              <th id = "ul" scope="col"></th>
+              <th id = "peer_dl" scope="col"></th>
+              <th id = "peer_downloaded" scope="col"></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
   </div>
   
   <div class="mainContainer container" id="torrentSort" style="display:none;">

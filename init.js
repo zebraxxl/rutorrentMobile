@@ -53,6 +53,19 @@ var detailsIdToLangId = {
   'comment' : 'Comment'
 };
 
+var peersIdToLangId = {
+  'address' : 'Address',
+  'client' : 'ClientVersion',
+  'flags' : 'Flags',
+  'done' : 'Done',
+  'downloaded' : 'Downloaded',
+  'uploaded' : 'Uploaded',
+  'dl' : 'DL',
+  'ul' : 'UL',
+  'peer_dl' : 'PeerDL',
+  'peer_downloaded' : 'PeerDownloaded',
+};
+
 if(!$type(theWebUI.getTrackerName))
 {
   theWebUI.getTrackerName = function(announce)
@@ -494,6 +507,14 @@ plugin.showFilesInDetails = function() {
   this.loadFiles();
 }
 
+plugin.showPeersInDetails = function() {
+  $('.detailsPage').css('display', 'none');
+  $('#detailsPeersPage').css('display', '');
+  $('#detailsNav li').removeClass('active');
+  $('#detailsPeers').addClass('active');
+  this.loadPeers();
+}
+
 plugin.toogleTrackerInfo = function(s) {
   this.toogleDisplay($(s).parent().find('div'));
 }
@@ -537,6 +558,39 @@ plugin.loadTrackers = function() {
             return false;
           });
         }
+      }
+    });
+  }
+};
+
+plugin.loadPeers = function() {
+  if (this.torrent != undefined) {
+    var hash = this.torrent.hash;
+    this.request('?action=getpeers&hash=' + hash, function(data) {
+      var peers = data;
+      var pid = Object.keys(peers);
+      if (hash == mobile.torrent.hash) {
+        var tableHeight = $(window).height() - $('#mainNavbar').outerHeight(true) - ($('#torrentDetails .nav').outerHeight(true) + $('#torrentDetailsHeader').outerHeight(true) + ($('#torrentDetailsHeader #torrentProgress').outerHeight(true) - $('#torrentDetailsHeader #torrentProgress').outerHeight()));
+        $('div.tableFixHead').css("max-height", tableHeight + "px");
+        
+        var peersHtml = '';
+
+        for (var i = 0; i < pid.length; i++) {
+          peersHtml += '<tr>' +
+          '<td>' + peers[pid[i]].ip + ':' +  peers[pid[i]].port + '</td>' +
+          '<td>' + peers[pid[i]].version + '</td>' +
+          '<td>' + peers[pid[i]].flags + '</td>' +
+          '<td>' + peers[pid[i]].done + '%</td>' +
+          '<td>' + theConverter.bytes(peers[pid[i]].downloaded,2) + '</td>' +
+          '<td>' + theConverter.bytes(peers[pid[i]].uploaded,2) + '</td>' +
+          '<td>' + theConverter.speed(peers[pid[i]].dl) + '</td>' +
+          '<td>' + theConverter.speed(peers[pid[i]].ul) + '</td>' +
+          '<td>' + theConverter.speed(peers[pid[i]].peerdl) + '</td>' +
+          '<td>' + theConverter.bytes(peers[pid[i]].peerdownloaded,2) + '</td>' +
+          '</tr>';
+        }
+
+        $('#peersTable tbody').html(peersHtml);
       }
     });
   }
@@ -1080,6 +1134,7 @@ plugin.update = function(singleUpdate) {
             if (plugin.torrents[plugin.torrent.hash] != undefined) {
               plugin.torrent = plugin.torrents[plugin.torrent.hash];
               plugin.fillDetails(plugin.torrent);
+              plugin.loadPeers();
             } else {
               plugin.showList();
             }
@@ -1341,6 +1396,7 @@ plugin.onLangLoaded = function() {
   $('#detailsDetailsTab a').text(theUILang.General);
   $('#detailsTrackers a').text(theUILang.Trackers);
   $('#detailsFiles a').text(theUILang.Files);
+  $('#detailsPeers a').text(theUILang.Peers);
 
   $('#torrentDetails table tr').each(function(n, v) {
     $(v).children('td:first').text(theUILang[detailsIdToLangId[v.id]]);
@@ -1362,6 +1418,10 @@ plugin.onLangLoaded = function() {
   $('#sortOption').parent().children('label').children('h5').text(theUILang.SortTorrents);
   $('#sortOk').text(theUILang.ok);
   $('#sortCancel').text(theUILang.Cancel);
+  
+  $('#peersTable th').each(function(n, v) {
+    $(v).text(theUILang[peersIdToLangId[v.id]]);
+  });
 };
 
 /**

@@ -17,6 +17,16 @@ select {
 .table {
   margin-bottom: 0;
 }
+.tableFixHead {
+  overflow-y: auto;
+  margin-bottom: 0;
+}
+.tableFixHead th {
+  position: sticky;
+  position: -webkit-sticky;
+  top: 0;
+  background: #eee;
+}
 .icon-white {
   color: white;
 }
