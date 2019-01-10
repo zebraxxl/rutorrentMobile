@@ -1161,6 +1161,12 @@ plugin.update = function(singleUpdate) {
         plugin.updateTrackerDropdown();
       }
 
+      $.each(plugin.torrentsPrev, function(n, v){
+        if ( ! plugin.torrents[n] ) {
+          listHtml.find($('#' + n)).remove();
+        }
+      });
+
       if ( listHtmlString ) {
         if (singleUpdate) {
           listHtml.html(listHtmlString);
