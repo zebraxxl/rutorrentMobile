@@ -1105,7 +1105,7 @@ plugin.update = function(singleUpdate) {
         tul += iv(v.ul);
         tdl += iv(v.dl);
 
-        if ( ! listHtml.find($('#' + v.hash)).length ) {
+        if ( ! listHtml.find($('#' + v.hash)).length || singleUpdate) {
           listHtmlString +=
           '<tr id="' + v.hash + '" class="torrentBlock status' + statusClass + ' state' + stateClass + ' error' + errorClass + ' label' + plugin.labelIds[v.label] + '" onclick="mobile.showDetails(this.id);"><td>' +
           '<h5>' + v.name + '</h5>' +
@@ -1161,8 +1161,12 @@ plugin.update = function(singleUpdate) {
         plugin.updateTrackerDropdown();
       }
 
-      if ( listHtml ) {
-        listHtml.append(listHtmlString);
+      if ( listHtmlString ) {
+        if (singleUpdate) {
+          listHtml.html(listHtmlString);
+        } else {
+          listHtml.append(listHtmlString);
+        }
       }
 
       $.each(trackersMap, function(id, ns) {
