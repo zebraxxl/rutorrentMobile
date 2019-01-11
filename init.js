@@ -8,6 +8,7 @@ plugin.sort = '-addtime'; /* 'name', 'size', 'uploaded', 'downloaded', 'done', '
 plugin.statusFilter = {downloading: 1, completed: 2, label: 4, all: 3, tracker: 5, active: 6, inactive: 7, error: 8};
 plugin.navFilter = undefined;
 plugin.torrents = null;
+plugin.torrentsPrev = null;
 plugin.labels = null;
 plugin.torrent = undefined;
 plugin.lastHref = "";
@@ -19,7 +20,6 @@ plugin.throttleLoaded = false;
 plugin.seedingtimeLoaded = false;
 plugin.getDirLoaded = false;
 plugin.bootstrapJS = false;
-plugin.torrentsPrev = "";
 
 var pageToHash = {
   'torrentsList': '',
