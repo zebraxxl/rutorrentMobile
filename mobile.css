@@ -128,6 +128,12 @@ h5, #detailsTrackersPage a, #detailsFilesPage a, #detailsDetailsPage #label td, 
 .nav-tabs #sort #sortIcon i {
   color: #428bca;
 }
+.nav-tabs #refresh {
+  float: right;
+}
+.nav-tabs #refresh #refreshIcon i {
+  color: #428bca;
+}
 
 
 /*** Torrent Details ***/
