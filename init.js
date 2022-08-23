@@ -489,7 +489,7 @@ plugin.fillDetails = function(d) {
   if (this.ratioGroupsLoaded) {
     $('#torrentRatioGrp option').prop('selected', false);
     if (d.ratiogroup) {
-      $('#torrentRatioGrp option[value=' + d.ratiogroup.replace('rat_','') + ']').prop('selected', true);
+      $('#torrentRatioGrp option[value=' + d.ratiogroup.replace(/.*rat_/,'') + ']').prop('selected', true);
     } else {
       $('#torrentRatioGrp option[value=-1]').prop('selected', true);
     }
@@ -1124,7 +1124,7 @@ plugin.update = function(singleUpdate) {
   theWebUI.requestWithTimeout("?list=1&getmsg=1",
   function(data) {
     plugin.torrents = data.torrents;
-    plugin.labels = data.labels;
+    plugin.labels = theWebUI.cLabels;
     plugin.labelIds = {};
     plugin.trackerIds = {};
     plugin.labelIds[''] = 0;
@@ -1135,7 +1135,7 @@ plugin.update = function(singleUpdate) {
     var tdl = 0;
     var nextLabelId = 1;
     var nextTrackerId = 1;
-    var labelsHtml = '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.label, this, \'\');">' + theUILang.No_label + '</a></li>';
+    var labelsHtml = '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.label, this, \'\');">' + theUILang.No_label + ' (' + theWebUI.labels['-_-_-nlb-_-_-'].cnt + ')</a></li>';
     var trackersHtml = '';
 
     Object.keys(plugin.labels).sort().forEach(function(l) {
@@ -1143,7 +1143,7 @@ plugin.update = function(singleUpdate) {
         plugin.labelIds[l] = nextLabelId++;
       }
 
-      labelsHtml += '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.label, this, \'' + l + '\');">' + l + ' (' + plugin.labels[l] + ')</a></li>';
+      labelsHtml += '<li><a href="javascript://void();" onclick="mobile.filter(mobile.statusFilter.label, this, \'' + l + '\');">' + l + ' (' + theWebUI.labels['-_-_-' + l + '-_-_-'].cnt + ')</a></li>';
     });
     $('#torrentsLabels ul').html(labelsHtml);
     if ($('#torrentsLabels ul').is(':visible')) {
