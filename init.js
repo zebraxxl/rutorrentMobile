@@ -12,6 +12,7 @@ plugin.torrentsPrev = null;
 plugin.labels = null;
 plugin.torrent = undefined;
 plugin.lastHref = "";
+plugin.scrollTop = 0;
 plugin.currFilter = plugin.statusFilter.all;
 plugin.labelInEdit = false;
 plugin.eraseWithDataLoaded = false;
@@ -182,7 +183,6 @@ plugin.request = function(url, func) {
 plugin.setHash = function(page) {
   window.location.hash = pageToHash[page];
   this.lastHref = window.location.href;
-  window.scrollTo(0,0);
 };
 
 plugin.showAlert = function(message,alerttype) {
@@ -219,9 +219,18 @@ plugin.createiFrame = function() {
 };
 
 plugin.showPage = function(page) {
+  if (window.location.hash == "" && page != 'torrentsList') {
+    this.scrollTop = $(window).scrollTop();
+  }
   $('.mainContainer').css('display', 'none');
   $('.torrentControl').css('display', 'none');
   $('#' + page).css('display', '');
+  if (page == 'torrentsList') {
+    window.scrollTo(0,this.scrollTop);
+  }
+  else {
+    window.scrollTo(0,0);
+  }
   this.setHash(page);
 };
 
