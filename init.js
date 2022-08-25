@@ -197,7 +197,7 @@ plugin.showAlert = function(message,alerttype) {
 
 plugin.createiFrame = function() {
   $('#addTorrent').prepend('<iframe id="uploadFrame" name="uploadFrame" style="visibility: hidden; width: 0; height: 0; line-height: 0; font-size: 0; border: 0;"></iframe>')
-  $('#uploadFrame').load(function() {
+  $('#uploadFrame').on('load', function() {
     var d = (this.contentDocument || this.contentWindow.document);
 
     if(d && (d.location.href != "about:blank")) {
@@ -215,6 +215,7 @@ plugin.createiFrame = function() {
       }
     }
     $('#uploadFrame').remove();
+    plugin.update(true);
   });
 };
 
