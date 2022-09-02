@@ -1,7 +1,7 @@
 /*
  * PLUGIN MOBILE
  *
- * Dutch language file.
+ * Swedish language file.
  *
  * Author: 
  */
