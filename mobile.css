@@ -16,6 +16,7 @@ select {
 }
 .table {
   margin-bottom: 0;
+  table-layout: fixed;
 }
 .tableFixHead {
   overflow-y: auto;
