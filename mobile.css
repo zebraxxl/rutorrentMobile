@@ -16,6 +16,8 @@ select {
 }
 .table {
   margin-bottom: 0;
+}
+.mainContainer .table {
   table-layout: fixed;
 }
 .tableFixHead {
